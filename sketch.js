@@ -4,11 +4,12 @@ let player;
 let collectables = [];
 let obstacles = [];
 let totalSets = 10;
-let speed = 5; 
+let speed = 5;
 let sound, fft;
+let gameStarted = false;
 
 function preload() {
-  sound = loadSound('tecno.mp3'); 
+  sound = loadSound('tecno.mp3');
 }
 
 function setup() {
@@ -19,22 +20,24 @@ function setup() {
 
   ground = new Ground(600, 10000);
   player = new Player(0);
-  
+
   for (let i = 0; i < totalSets; i++) {
     spawnCollectableSet(i);
   }
-  
+
   fft = new p5.FFT();
-  sound.loop(); 
 }
 
 function draw() {
+  if (!gameStarted) {
+    return;
+  }
+
   background(200);
 
   let spectrum = fft.analyze();
   let bassEnergy = fft.getEnergy("bass");
-  speed = map(bassEnergy, 0, 255, 7, 20); 
-
+  speed = map(bassEnergy, 0, 255, 7, 20);
 
   displayStats();
 
@@ -53,7 +56,7 @@ function draw() {
     }
 
     if (player.collidesWith(collectables[i])) {
-        collectables[i].resetPosition(); 
+      collectables[i].resetPosition();
       console.log("add score!");
     }
   }
@@ -63,7 +66,7 @@ function draw() {
     obstacles[i].draw();
 
     if (obstacles[i].z > 500) {
-      obstacles[i].resetPosition(); 
+      obstacles[i].resetPosition();
     }
 
     if (player.collidesWith(obstacles[i])) {
@@ -87,24 +90,27 @@ function keyPressed() {
 }
 
 function spawnCollectableSet(index) {
-  let zPosition = -1000 - index * 800; 
-
+  let zPosition = -1000 - index * 800;
   let availableLanes = [-150, 0, 150];
-
   let numCollectables = random([2, 3]);
+
   for (let i = 0; i < numCollectables; i++) {
     let laneIndex = floor(random(availableLanes.length));
-    let xPos = availableLanes[laneIndex]; 
-    availableLanes.splice(laneIndex, 1); 
-
+    let xPos = availableLanes[laneIndex];
+    availableLanes.splice(laneIndex, 1);
     collectables.push(new Collectable(xPos, 0, zPosition + i * 200));
   }
 
   if (random() < 0.5 && availableLanes.length > 0) {
-    let laneIndex = floor(random(availableLanes.length)); 
+    let laneIndex = floor(random(availableLanes.length));
     let obstacleX = availableLanes[laneIndex];
-    availableLanes.splice(laneIndex, 1); 
-
-    obstacles.push(new Obstacle(obstacleX, 0, zPosition + numCollectables * 200 + 100)); 
+    availableLanes.splice(laneIndex, 1);
+    obstacles.push(new Obstacle(obstacleX, 0, zPosition + numCollectables * 200 + 100));
   }
+}
+
+function startGame() {
+  gameStarted = true;
+  sound.loop();
+  document.getElementById('playButton').style.display = 'none';
 }
