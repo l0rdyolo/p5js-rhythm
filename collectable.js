@@ -10,15 +10,15 @@ class Collectable {
     noStroke();
     fill('green');
     translate(this.x, this.y, this.z);
-    sphere(25); // Collectable küre
+    sphere(25); 
     pop();
   }
 
   move(speed) {
-    this.z += speed; // Oyuncuya doğru yaklaş
+    this.z += speed; 
   }
 
   resetPosition() {
-    this.z = -5000; // Ekranı geçince yeniden ileri konumlandır
+    this.z = -5000; 
   }
 }

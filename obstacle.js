@@ -12,15 +12,15 @@ class Obstacle {
     noStroke();
     translate(this.x, this.y, this.z);
     rotateX(PI);
-    cone(50, 100); // Obstacle konisi
+    cone(50, 100);
     pop();
   }
 
   move(speed) {
-    this.z += speed; // Oyuncuya doğru yaklaş
+    this.z += speed; 
   }
 
   resetPosition() {
-    this.z = -5000; // Ekranı geçince yeniden ileri konumlandır
+    this.z = -5000;
   }
 }

@@ -1,13 +1,12 @@
-// ParticleEffect Sınıfı
 class ParticleEffect {
   constructor(x, y, z) {
     this.x = x;
     this.y = y;
     this.z = z;
     this.particles = [];
-    this.lifetime = 60; // Efektin ne kadar süreceği (frame sayısı)
+    this.lifetime = 60; 
     
-    // Rastgele partiküller oluştur
+    
     for (let i = 0; i < 10; i++) {
       this.particles.push({
         x: this.x,
@@ -22,8 +21,6 @@ class ParticleEffect {
 
   update() {
     this.lifetime--;
-
-    // Tüm partikülleri güncelle
     for (let p of this.particles) {
       p.x += p.xSpeed;
       p.y += p.ySpeed;
@@ -34,16 +31,16 @@ class ParticleEffect {
   draw() {
     return;
     push();
-    fill(255, 255, 0, map(this.lifetime, 0, 60, 0, 255)); // Partiküller zamanla kaybolur
+    fill(255, 255, 0, map(this.lifetime, 0, 60, 0, 255)); 
     for (let p of this.particles) {
       translate(p.x, p.y, p.z);
-      sphere(5); // Partikül küresi
+      sphere(5);
       translate(-p.x, -p.y, -p.z);
     }
     pop();
   }
 
   isFinished() {
-    return this.lifetime <= 0; // Ömrü bittiyse true döner
+    return this.lifetime <= 0; 
   }
 }
