@@ -2,7 +2,8 @@ class Ground {
   constructor(width, depth) {
     this.width = width;
     this.depth = depth;
-    this.laneColor = 'rgb(78,30,106)';
+    this.laneColor = Color.NeonBlue.hex;  // Global renk paletinden NeonBlue
+    this.highlightColor = Color.NeonPink.hex;  // Global renk paletinden NeonPink
     this.lineManager = new LaneLineManager(this.width, this.depth);  // LaneLineManager kullanımı
   }
 
@@ -14,7 +15,13 @@ class Ground {
       push();
       let x = -this.width / 2 + laneWidth / 2 + i * laneWidth;
 
-      fill(this.laneColor);  // Şeritler eski rengini korur
+      // Oyuncunun bulunduğu şerit daha parlak olacak
+      if (i === player.currentLane) {
+        fill(this.highlightColor);  // Oyuncunun olduğu şeridi parlak renkle çiz
+      } else {
+        fill(this.laneColor);  // Diğer şeritler normal renkte kalacak
+      }
+
       translate(x, 100, 0);
       rotateX(HALF_PI);
       noStroke();

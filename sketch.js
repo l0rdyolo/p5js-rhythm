@@ -1,3 +1,18 @@
+/***
+ * 
+ * GLOBAL COLOR
+ * 
+***/
+const Color = {
+  NeonPink: { hex: '#ff2a6d', rgb: 'rgb(255,42,109)' },
+  NeonBlue: { hex: '#05d9e8', rgb: 'rgb(5,217,232)' },
+  NeonPurple: { hex: '#8f00ff', rgb: 'rgb(143,0,255)' },
+  NeonGreen: { hex: '#39ff14', rgb: 'rgb(57,255,20)' },
+  DeepBlack: { hex: '#01012b', rgb: 'rgb(1,1,43)' },
+
+  lineEffect: { x1: 'rgb(255, 0, 255)', x2: 'rgb(0, 255, 255)', x3: 'rgb(255, 255, 0)' }
+};
+
 let cam;
 let ground;
 let player;
@@ -22,14 +37,14 @@ function setup() {
     let lanePositions = [-150, 0, 150];
     let laneIndex = floor(random(lanePositions.length));
     let xPos = lanePositions[laneIndex];
-    obstacles.push(new Obstacle(xPos, 0, -1000 - i * 400));
+    obstacles.push(new Obstacle(xPos, 0, 220 - i * 400));
   }
 
   for (let i = 0; i < totalCollectables; i++) {
     let lanePositions = [-150, 0, 150];
     let laneIndex = floor(random(lanePositions.length));
     let xPos = lanePositions[laneIndex];
-    collectables.push(new Collectable(xPos, 0, -1000 - i * 400));
+    collectables.push(new Collectable(xPos, 0, 220 - i * 400));
   }
 
   startGame();
@@ -40,10 +55,16 @@ function draw() {
     return;
   }
 
-  background(200);
+  background(Color.DeepBlack.rgb);
 
-  ambientLight(100, 100, 100);
-  directionalLight(255, 255, 255, 0.25, 0.25, -1);
+  // Neon teması için ışık ayarları
+  ambientLight(50, 50, 50);  // Karanlık ambiyans ışığı
+  pointLight(255, 255, 255, 0, -300, 400);  // Daha parlak nokta ışığı
+  directionalLight(255, 255, 255, 0.5, 0.5, -1);  // Yönlü ışık
+
+  // Objeler için parlaklık ve yüzey özellikleri
+  specularMaterial(200);  
+  shininess(255);  
 
   ground.draw(player);
   player.draw();

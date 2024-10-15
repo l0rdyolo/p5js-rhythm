@@ -8,7 +8,7 @@ class Collectable {
 
   draw() {
     push();
-    fill('yellow');
+    fill(Color.NeonGreen.rgb);
     noStroke();
     translate(this.x, this.y, this.z);
     sphere(this.size);  // Küre şeklinde toplanabilir nesne

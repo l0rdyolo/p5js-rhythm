@@ -24,8 +24,7 @@ class Player {
 
     for (let i = 0; i < this.trail.length; i++) {
       let trailPart = this.trail[i];
-
-      fill(100, 100, 255, trailPart.alpha);
+      fill(255, trailPart.alpha);
 
       push();
       noStroke();
@@ -35,7 +34,7 @@ class Player {
     }
 
     push();
-    fill('blue');
+    fill(Color.NeonBlue.rgb);
     noStroke();
     translate(this.x, this.y, this.z); 
     sphere(22);
