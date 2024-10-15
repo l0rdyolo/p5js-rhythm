@@ -29,7 +29,7 @@ function setup() {
     let lanePositions = [-150, 0, 150];
     let laneIndex = floor(random(lanePositions.length));
     let xPos = lanePositions[laneIndex];
-    collectables.push(new Collectable(xPos, 0, -1000 - i * 400));  // Toplanabilir nesneler
+    collectables.push(new Collectable(xPos, 0, -1000 - i * 400));
   }
 
   startGame();
@@ -48,6 +48,7 @@ function draw() {
   ground.draw(player);
   player.draw();
 
+  // Collectable'lar ve player çarpışma kontrolü
   for (let i = collectables.length - 1; i >= 0; i--) {
     collectables[i].move(speed);
     collectables[i].draw();
@@ -58,11 +59,16 @@ function draw() {
 
     if (collectables[i].collidesWith(player)) {
       collectables[i].resetPosition();
-      score += 10;  // Skoru artır
-      document.getElementById('score').innerText = "Score: " + score;  // Skoru HTML'de güncelle
+      score += 10;
+      document.getElementById('score').innerText = "Score: " + score;
+
+      // Şerit çizgisi kırmızı yapılıyor
+      let laneKey = collectables[i].x === -150 ? 'left' : (collectables[i].x === 0 ? 'middle' : 'right');
+      ground.triggerLaneColor(laneKey);  // Şerit anahtarlarını kullan
     }
   }
 
+  // Obstacle'lar ve player çarpışma kontrolü
   for (let i = obstacles.length - 1; i >= 0; i--) {
     obstacles[i].move(speed);
     obstacles[i].draw();
