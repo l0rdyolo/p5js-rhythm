@@ -3,14 +3,11 @@ let ground;
 let player;
 let collectables = [];
 let obstacles = [];
-let totalSets = 10;
 let speed = 5;
-let sound, fft;
 let gameStarted = false;
-
-function preload() {
-  sound = loadSound('tecno.mp3');
-}
+let totalObstacles = 5;
+let totalCollectables = 5;
+let score = 0;
 
 function setup() {
   createCanvas(600, 600, WEBGL);
@@ -21,11 +18,21 @@ function setup() {
   ground = new Ground(600, 10000);
   player = new Player(0);
 
-  for (let i = 0; i < totalSets; i++) {
-    spawnCollectableSet(i);
+  for (let i = 0; i < totalObstacles; i++) {
+    let lanePositions = [-150, 0, 150];
+    let laneIndex = floor(random(lanePositions.length));
+    let xPos = lanePositions[laneIndex];
+    obstacles.push(new Obstacle(xPos, 0, -1000 - i * 400));
   }
 
-  fft = new p5.FFT();
+  for (let i = 0; i < totalCollectables; i++) {
+    let lanePositions = [-150, 0, 150];
+    let laneIndex = floor(random(lanePositions.length));
+    let xPos = lanePositions[laneIndex];
+    collectables.push(new Collectable(xPos, 0, -1000 - i * 400));  // Toplanabilir nesneler
+  }
+
+  startGame();
 }
 
 function draw() {
@@ -35,16 +42,10 @@ function draw() {
 
   background(200);
 
-  let spectrum = fft.analyze();
-  let bassEnergy = fft.getEnergy("bass");
-  speed = map(bassEnergy, 0, 255, 7, 20);
-
-  displayStats();
-
   ambientLight(100, 100, 100);
   directionalLight(255, 255, 255, 0.25, 0.25, -1);
 
-  ground.draw();
+  ground.draw(player);
   player.draw();
 
   for (let i = collectables.length - 1; i >= 0; i--) {
@@ -55,9 +56,10 @@ function draw() {
       collectables[i].resetPosition();
     }
 
-    if (player.collidesWith(collectables[i])) {
+    if (collectables[i].collidesWith(player)) {
       collectables[i].resetPosition();
-      console.log("add score!");
+      score += 10;  // Skoru artır
+      document.getElementById('score').innerText = "Score: " + score;  // Skoru HTML'de güncelle
     }
   }
 
@@ -69,16 +71,11 @@ function draw() {
       obstacles[i].resetPosition();
     }
 
-    if (player.collidesWith(obstacles[i])) {
+    if (obstacles[i].collidesWith(player)) {
       console.log("Game Over!");
       noLoop();
     }
   }
-}
-
-function displayStats() {
-  document.getElementById('speed').innerText = "Speed: " + nf(speed, 1, 2);
-  document.getElementById('fps').innerText = "FPS: " + floor(frameRate());
 }
 
 function keyPressed() {
@@ -89,28 +86,6 @@ function keyPressed() {
   }
 }
 
-function spawnCollectableSet(index) {
-  let zPosition = -1000 - index * 800;
-  let availableLanes = [-150, 0, 150];
-  let numCollectables = random([2, 3]);
-
-  for (let i = 0; i < numCollectables; i++) {
-    let laneIndex = floor(random(availableLanes.length));
-    let xPos = availableLanes[laneIndex];
-    availableLanes.splice(laneIndex, 1);
-    collectables.push(new Collectable(xPos, 0, zPosition + i * 200));
-  }
-
-  if (random() < 0.5 && availableLanes.length > 0) {
-    let laneIndex = floor(random(availableLanes.length));
-    let obstacleX = availableLanes[laneIndex];
-    availableLanes.splice(laneIndex, 1);
-    obstacles.push(new Obstacle(obstacleX, 0, zPosition + numCollectables * 200 + 100));
-  }
-}
-
 function startGame() {
   gameStarted = true;
-  sound.loop();
-  document.getElementById('playButton').style.display = 'none';
 }
