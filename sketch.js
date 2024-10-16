@@ -1,8 +1,4 @@
-/***
- * 
- * GLOBAL COLOR
- * 
-***/
+// Global Color Definitions
 const Color = {
   NeonPink: { hex: '#ff2a6d', rgb: 'rgb(255,42,109)' },
   NeonBlue: { hex: '#05d9e8', rgb: 'rgb(5,217,232)' },
@@ -30,9 +26,10 @@ function setup() {
   cam.setPosition(0, -400, 560);
   cam.lookAt(0, 0, 0);
 
-  ground = new Ground(600, 10000);
-  player = new Player(0);
+  ground = new Ground(600, 10000);  // Ground with neon lines
+  player = new Player(0);  // Player (car)
 
+  // Create obstacles randomly across lanes
   for (let i = 0; i < totalObstacles; i++) {
     let lanePositions = [-150, 0, 150];
     let laneIndex = floor(random(lanePositions.length));
@@ -40,6 +37,7 @@ function setup() {
     obstacles.push(new Obstacle(xPos, 0, -200 - i * 400));
   }
 
+  // Create collectables randomly across lanes
   for (let i = 0; i < totalCollectables; i++) {
     let lanePositions = [-150, 0, 150];
     let laneIndex = floor(random(lanePositions.length));
@@ -55,21 +53,18 @@ function draw() {
     return;
   }
 
-  background(Color.DeepBlack.rgb);
+  background(Color.DeepBlack.rgb);  // Neon game background
 
-  // Neon teması için karanlık ışık ayarları
-  ambientLight(20, 20, 20);  // Daha karanlık bir ambiyans ışığı
-  pointLight(255, 255, 255, 0, -300, 400);  // Nokta ışığı, objelere odaklı
-  directionalLight(100, 100, 100, 0.5, 0.5, -1);  // Düşük yoğunlukta yönlü ışık
+  // Lighting setup
+  ambientLight(50, 50, 50);  // Dark ambient lighting for neon effect
+  pointLight(255, 255, 255, 0, -300, 400);  // Bright point light
+  directionalLight(255, 255, 255, 0.5, 0.5, -1);  // Directional light
 
-  // Objeler için parlaklık ve yüzey özellikleri
-  specularMaterial(150);  // Objelerin daha az parlak olması için düşük değer
-  shininess(150);  // Parlaklık yüzeyi için orta düzeyde parlaklık
-
+  // Ground and player rendering
   ground.draw(player);
   player.draw();
 
-  // Collectable'lar ve player çarpışma kontrolü
+  // Collectables rendering and collision detection
   for (let i = collectables.length - 1; i >= 0; i--) {
     collectables[i].move(speed);
     collectables[i].draw();
@@ -83,13 +78,13 @@ function draw() {
       score += 10;
       document.getElementById('score').innerText = "Score: " + score;
 
-      // Şerit çizgisi kırmızı yapılıyor
+      // Trigger lane color on collecting item
       let laneKey = collectables[i].x === -150 ? 'left' : (collectables[i].x === 0 ? 'middle' : 'right');
-      ground.triggerLaneColor(laneKey);  // Şerit anahtarlarını kullan
+      ground.triggerLaneColor(laneKey);
     }
   }
 
-  // Obstacle'lar ve player çarpışma kontrolü
+  // Obstacles rendering and collision detection
   for (let i = obstacles.length - 1; i >= 0; i--) {
     obstacles[i].move(speed);
     obstacles[i].draw();

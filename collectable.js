@@ -13,7 +13,7 @@ class Collectable {
     this.colorSpeed = 0.02;  // Renk geçiş hızı
 
     this.#_startColor = Color.NeonPink.rgb;
-    this.#_endColor = Color.NeonPink.rgb;
+    this.#_endColor = Color.NeonGreen.rgb;
   }
 
   draw() {
