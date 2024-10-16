@@ -42,7 +42,7 @@ class Collectable {
   }
 
   resetPosition() {
-    this.z = -1000;  // Nesne ekran dışına çıktığında yeniden pozisyonlanır
+    this.z = -2000;  // Nesne ekran dışına çıktığında yeniden pozisyonlanır
   }
 
   collidesWith(player) {

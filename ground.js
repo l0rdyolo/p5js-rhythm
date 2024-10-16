@@ -2,8 +2,8 @@ class Ground {
   constructor(width, depth) {
     this.width = width;
     this.depth = depth;
-    this.laneColor = Color.NeonBlue.hex;  // Global renk paletinden NeonBlue
-    this.highlightColor = Color.NeonPink.hex;  // Global renk paletinden NeonPink
+    this.laneColor = Color.NeonBlue.hex;  // Neon zemin rengi
+    this.highlightColor = Color.NeonGreen.hex;   // Oyuncunun bulunduğu şerit
     this.lineManager = new LaneLineManager(this.width, this.depth);  // LaneLineManager kullanımı
   }
 

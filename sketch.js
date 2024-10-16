@@ -1,14 +1,3 @@
-// Global Color Definitions
-const Color = {
-  NeonPink: { hex: '#ff2a6d', rgb: 'rgb(255,42,109)' },
-  NeonBlue: { hex: '#05d9e8', rgb: 'rgb(5,217,232)' },
-  NeonPurple: { hex: '#8f00ff', rgb: 'rgb(143,0,255)' },
-  NeonGreen: { hex: '#39ff14', rgb: 'rgb(57,255,20)' },
-  DeepBlack: { hex: '#01012b', rgb: 'rgb(1,1,43)' },
-
-  lineEffect: { x1: 'rgb(255, 0, 255)', x2: 'rgb(0, 255, 255)', x3: 'rgb(255, 255, 0)' }
-};
-
 let cam;
 let ground;
 let player;
@@ -16,9 +5,20 @@ let collectables = [];
 let obstacles = [];
 let speed = 5;
 let gameStarted = false;
-let totalObstacles = 5;
-let totalCollectables = 5;
+let totalObstacles = 8;
+let totalCollectables = 15;
 let score = 0;
+
+let buildings = [];
+let totalBuildings = 10;  // Sağ ve sol tarafa 5'er bina
+let buildingDistance = 400;  // Binaların ground etrafında düzenli aralıklarla yerleştirilmesi
+
+let technoMusic, kickSound, amp;
+
+function preload() {
+  technoMusic = loadSound('tecno.mp3');
+  kickSound = loadSound('kick.mp3');
+}
 
 function setup() {
   createCanvas(600, 600, WEBGL);
@@ -26,25 +26,39 @@ function setup() {
   cam.setPosition(0, -400, 560);
   cam.lookAt(0, 0, 0);
 
-  ground = new Ground(600, 10000);  // Ground with neon lines
-  player = new Player(0);  // Player (car)
+  // Amplitude analizcisi oluştur
+  amp = new p5.Amplitude();
+  
+  ground = new Ground(600, 10000);  // Zemin
+  player = new Player(0);  // Oyuncu (araba)
 
-  // Create obstacles randomly across lanes
+  // Engeller oluştur
   for (let i = 0; i < totalObstacles; i++) {
     let lanePositions = [-150, 0, 150];
     let laneIndex = floor(random(lanePositions.length));
     let xPos = lanePositions[laneIndex];
-    obstacles.push(new Obstacle(xPos, 0, -200 - i * 400));
+    obstacles.push(new Obstacle(xPos, 0, -3000 - i * 400));
   }
 
-  // Create collectables randomly across lanes
+  // Collectable'lar oluştur
   for (let i = 0; i < totalCollectables; i++) {
     let lanePositions = [-150, 0, 150];
     let laneIndex = floor(random(lanePositions.length));
     let xPos = lanePositions[laneIndex];
-    collectables.push(new Collectable(xPos, 0, -200 - i * 400));
+    collectables.push(new Collectable(xPos, 0, -3000 - i * 400));
   }
 
+  // Binaları oluştur: ground'un sağında ve solunda yer alacak şekilde
+  for (let i = 0; i < totalBuildings; i++) {
+    let side = i % 2 === 0 ? 1 : -1;  // Sağ ve sol yerleşimi
+    let x = side * (ground.width / 2 + random(50, 100));  // Binalar ground'un dışında yer alacak
+    let z = random(-3000, -500);  // Uzaklığa göre binalar
+    let width = random(50, 100);
+    let height = random(100, 300);
+    buildings.push(new Building(x, z, width, height));
+  }
+
+  technoMusic.loop();
   startGame();
 }
 
@@ -53,18 +67,28 @@ function draw() {
     return;
   }
 
-  background(Color.DeepBlack.rgb);  // Neon game background
+  background(Color.DeepBlack.rgb);  // Neon arka plan
 
-  // Lighting setup
-  ambientLight(50, 50, 50);  // Dark ambient lighting for neon effect
-  pointLight(255, 255, 255, 0, -300, 400);  // Bright point light
-  directionalLight(255, 255, 255, 0.5, 0.5, -1);  // Directional light
+  // Işıklandırma
+  ambientLight(50, 50, 50);  // Loş ortam ışığı
+  pointLight(255, 255, 255, 0, -300, 400);  // Nokta ışığı
+  directionalLight(255, 255, 255, 0.5, 0.5, -1);  // Yönlü ışık
 
-  // Ground and player rendering
+  // Zemin ve oyuncu çizimi
   ground.draw(player);
   player.draw();
 
-  // Collectables rendering and collision detection
+  // Binaları çiz ve hareket ettir
+  for (let i = 0; i < buildings.length; i++) {
+    buildings[i].move(speed);
+    buildings[i].draw();
+
+    if (buildings[i].z > 500) {
+      buildings[i].resetPosition();  // Bina ekrandan çıktığında geri gönder
+    }
+  }
+
+  // Collectable'lar ve player çarpışma kontrolü
   for (let i = collectables.length - 1; i >= 0; i--) {
     collectables[i].move(speed);
     collectables[i].draw();
@@ -78,7 +102,9 @@ function draw() {
       score += 10;
       document.getElementById('score').innerText = "Score: " + score;
 
-      // Trigger lane color on collecting item
+      // Kick sound for collectable collection
+      // kickSound.play();
+
       let laneKey = collectables[i].x === -150 ? 'left' : (collectables[i].x === 0 ? 'middle' : 'right');
       ground.triggerLaneColor(laneKey);
     }
@@ -98,6 +124,17 @@ function draw() {
       noLoop();
     }
   }
+
+  // Oyun hızını ve FPS'yi göster
+  document.getElementById('speedDisplay').innerText = nf(speed, 1, 1);
+  document.getElementById('fpsDisplay').innerText = nf(frameRate(), 2, 0);
+
+  analyzeMusicTempo();
+}
+
+function analyzeMusicTempo() {
+  let level = amp.getLevel();
+  speed = map(level, 0, 1, 10, 18);  // Müzik temposuna göre oyun hızı
 }
 
 function keyPressed() {
