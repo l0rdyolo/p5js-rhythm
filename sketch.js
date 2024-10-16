@@ -37,14 +37,14 @@ function setup() {
     let lanePositions = [-150, 0, 150];
     let laneIndex = floor(random(lanePositions.length));
     let xPos = lanePositions[laneIndex];
-    obstacles.push(new Obstacle(xPos, 0, 220 - i * 400));
+    obstacles.push(new Obstacle(xPos, 0, -200 - i * 400));
   }
 
   for (let i = 0; i < totalCollectables; i++) {
     let lanePositions = [-150, 0, 150];
     let laneIndex = floor(random(lanePositions.length));
     let xPos = lanePositions[laneIndex];
-    collectables.push(new Collectable(xPos, 0, 220 - i * 400));
+    collectables.push(new Collectable(xPos, 0, -200 - i * 400));
   }
 
   startGame();
@@ -57,14 +57,14 @@ function draw() {
 
   background(Color.DeepBlack.rgb);
 
-  // Neon teması için ışık ayarları
-  ambientLight(50, 50, 50);  // Karanlık ambiyans ışığı
-  pointLight(255, 255, 255, 0, -300, 400);  // Daha parlak nokta ışığı
-  directionalLight(255, 255, 255, 0.5, 0.5, -1);  // Yönlü ışık
+  // Neon teması için karanlık ışık ayarları
+  ambientLight(20, 20, 20);  // Daha karanlık bir ambiyans ışığı
+  pointLight(255, 255, 255, 0, -300, 400);  // Nokta ışığı, objelere odaklı
+  directionalLight(100, 100, 100, 0.5, 0.5, -1);  // Düşük yoğunlukta yönlü ışık
 
   // Objeler için parlaklık ve yüzey özellikleri
-  specularMaterial(200);  
-  shininess(255);  
+  specularMaterial(150);  // Objelerin daha az parlak olması için düşük değer
+  shininess(150);  // Parlaklık yüzeyi için orta düzeyde parlaklık
 
   ground.draw(player);
   player.draw();
