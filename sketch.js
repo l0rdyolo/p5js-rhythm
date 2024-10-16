@@ -5,9 +5,20 @@ let collectables = [];
 let obstacles = [];
 let speed = 5;
 let gameStarted = false;
-let totalObstacles = 5;
-let totalCollectables = 5;
+let totalObstacles = 8;
+let totalCollectables = 15;
 let score = 0;
+
+let buildings = [];
+let totalBuildings = 10;  // Sağ ve sol tarafa 5'er bina
+let buildingDistance = 400;  // Binaların ground etrafında düzenli aralıklarla yerleştirilmesi
+
+let technoMusic, kickSound, amp;
+
+function preload() {
+  technoMusic = loadSound('tecno.mp3');
+  kickSound = loadSound('kick.mp3');
+}
 
 function setup() {
   createCanvas(600, 600, WEBGL);
@@ -15,23 +26,39 @@ function setup() {
   cam.setPosition(0, -400, 560);
   cam.lookAt(0, 0, 0);
 
-  ground = new Ground(600, 10000);
-  player = new Player(0);
+  // Amplitude analizcisi oluştur
+  amp = new p5.Amplitude();
+  
+  ground = new Ground(600, 10000);  // Zemin
+  player = new Player(0);  // Oyuncu (araba)
 
+  // Engeller oluştur
   for (let i = 0; i < totalObstacles; i++) {
     let lanePositions = [-150, 0, 150];
     let laneIndex = floor(random(lanePositions.length));
     let xPos = lanePositions[laneIndex];
-    obstacles.push(new Obstacle(xPos, 0, -1000 - i * 400));
+    obstacles.push(new Obstacle(xPos, 0, -3000 - i * 400));
   }
 
+  // Collectable'lar oluştur
   for (let i = 0; i < totalCollectables; i++) {
     let lanePositions = [-150, 0, 150];
     let laneIndex = floor(random(lanePositions.length));
     let xPos = lanePositions[laneIndex];
-    collectables.push(new Collectable(xPos, 0, -1000 - i * 400));
+    collectables.push(new Collectable(xPos, 0, -3000 - i * 400));
   }
 
+  // Binaları oluştur: ground'un sağında ve solunda yer alacak şekilde
+  for (let i = 0; i < totalBuildings; i++) {
+    let side = i % 2 === 0 ? 1 : -1;  // Sağ ve sol yerleşimi
+    let x = side * (ground.width / 2 + random(50, 100));  // Binalar ground'un dışında yer alacak
+    let z = random(-3000, -500);  // Uzaklığa göre binalar
+    let width = random(50, 100);
+    let height = random(100, 300);
+    buildings.push(new Building(x, z, width, height));
+  }
+
+  technoMusic.loop();
   startGame();
 }
 
@@ -40,13 +67,26 @@ function draw() {
     return;
   }
 
-  background(200);
+  background(Color.DeepBlack.rgb);  // Neon arka plan
 
-  ambientLight(100, 100, 100);
-  directionalLight(255, 255, 255, 0.25, 0.25, -1);
+  // Işıklandırma
+  ambientLight(50, 50, 50);  // Loş ortam ışığı
+  pointLight(255, 255, 255, 0, -300, 400);  // Nokta ışığı
+  directionalLight(255, 255, 255, 0.5, 0.5, -1);  // Yönlü ışık
 
+  // Zemin ve oyuncu çizimi
   ground.draw(player);
   player.draw();
+
+  // Binaları çiz ve hareket ettir
+  for (let i = 0; i < buildings.length; i++) {
+    buildings[i].move(speed);
+    buildings[i].draw();
+
+    if (buildings[i].z > 500) {
+      buildings[i].resetPosition();  // Bina ekrandan çıktığında geri gönder
+    }
+  }
 
   // Collectable'lar ve player çarpışma kontrolü
   for (let i = collectables.length - 1; i >= 0; i--) {
@@ -62,13 +102,15 @@ function draw() {
       score += 10;
       document.getElementById('score').innerText = "Score: " + score;
 
-      // Şerit çizgisi kırmızı yapılıyor
+      // Kick sound for collectable collection
+      // kickSound.play();
+
       let laneKey = collectables[i].x === -150 ? 'left' : (collectables[i].x === 0 ? 'middle' : 'right');
-      ground.triggerLaneColor(laneKey);  // Şerit anahtarlarını kullan
+      ground.triggerLaneColor(laneKey);
     }
   }
 
-  // Obstacle'lar ve player çarpışma kontrolü
+  // Obstacles rendering and collision detection
   for (let i = obstacles.length - 1; i >= 0; i--) {
     obstacles[i].move(speed);
     obstacles[i].draw();
@@ -82,6 +124,17 @@ function draw() {
       noLoop();
     }
   }
+
+  // Oyun hızını ve FPS'yi göster
+  document.getElementById('speedDisplay').innerText = nf(speed, 1, 1);
+  document.getElementById('fpsDisplay').innerText = nf(frameRate(), 2, 0);
+
+  analyzeMusicTempo();
+}
+
+function analyzeMusicTempo() {
+  let level = amp.getLevel();
+  speed = map(level, 0, 1, 10, 18);  // Müzik temposuna göre oyun hızı
 }
 
 function keyPressed() {

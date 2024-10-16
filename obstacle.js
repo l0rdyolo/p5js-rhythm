@@ -8,7 +8,7 @@ class Obstacle {
 
   draw() {
     push();
-    fill('red');
+    fill(Color.NeonPurple.hex);
     noStroke();
     translate(this.x, this.y, this.z);
     box(this.size, this.size, this.size);  
