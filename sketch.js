@@ -11,28 +11,31 @@ let totalCollectables = 15;
 let score = 0;
 
 let buildings = [];
-let totalBuildings = 10;  // Sağ ve sol tarafa 5'er bina
-let buildingDistance = 400;  // Binaların ground etrafında düzenli aralıklarla yerleştirilmesi
+let totalBuildings = 10;
+let buildingDistance = 400;
+
+let fps = 0;  // FPS sayacı
 
 let technoMusic, kickSound, amp;
+
 function preload() {
   technoMusic = loadSound('tecno.mp3');
   kickSound = loadSound('kick.mp3');
 }
 
 function setup() {
-  createCanvas(860, 430*1.2, WEBGL);
+  createCanvas(860, 430 * 1.2, WEBGL);
   pixelDensity(1);
   colorMode(RGB, 255, 255, 255, 1);
   cam = createCamera();
-  cam.setPosition(0, -50, 200);  // Daha yukarı ve arabaya daha yakın
+  cam.setPosition(0, -50, 200);
   cam.lookAt(0, 0, 0);
 
   backgroundLayer = new Background();
-  ground = new Ground(600, 10000);  // Zemin
-  player = new Player(0);  // Oyuncu (araba)
+  ground = new Ground(600, 10000);
+  player = new Player(0);
 
-  // Sağ ve sol tarafa binalar oluştur
+  // Binalar
   for (let i = 0; i < totalBuildings; i++) {
     let leftSide = new Building(-300, random(-3000, -500), random(100, 300), random(50, 100));
     let rightSide = new Building(300, random(-3000, -500), random(100, 300), random(50, 100));
@@ -43,20 +46,32 @@ function setup() {
 }
 
 function draw() {
-  background(Color.DeepBlack.rgb);  // Neon arka plan
- // Yolun virajına göre kamera dönüşü
- 
+  // FPS hesaplama
+  fps = frameRate();
+
+  background(Color.DeepBlack.rgb);
+
   // Işıklandırma
-  ambientLight(50, 50, 50);  // Loş ortam ışığı
-  pointLight(255, 255, 255, 0, -300, 400);  // Nokta ışığı
-  directionalLight(255, 255, 255, 0.5, 0.5, -1);  // Yönlü ışık
+  ambientLight(50, 50, 50);
+  pointLight(255, 255, 255, 0, -300, 400);
+  directionalLight(255, 255, 255, 0.5, 0.5, -1);
 
   // Zemin ve oyuncu çizimi
   backgroundLayer.draw();
   ground.draw(player);
   player.draw();
 
+  // HTML FPS göstergesi
+  updateStats();
+}
 
+function updateStats() {
+  // HTML üzerinden FPS değerini göster
+  document.getElementById('fpsDisplay').innerHTML = `FPS: ${nf(fps, 2, 1)}`;
+  // HTML üzerinden hızı göster
+  document.getElementById('speedDisplay').innerHTML = `Speed: ${speed}`;
+  // HTML üzerinden skoru göster
+  document.getElementById('score').innerHTML = `Score: ${score}`;
 }
 
 function keyPressed() {
