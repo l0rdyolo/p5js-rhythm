@@ -1,68 +1,70 @@
-let canvasSize = 680;
 let environment;
 let player;
-let colours;
-let lanePositions = [-40, 0, 40]; // X positions for the 3 lanes
-
-let colorPalette;
-
+let platform;
+let gameSpeed =  5;
+let cameraX = 0;
+let technoMusic;
 let score = 0;
-let fps = 0;
-let speed = 4;
+let platforms = [];
+
+const BASE_SPEED = 5;  // Oyun için temel hız
+const MAX_SPEED = 20;   // Maksimum oyun hızı
+
+function preload() {
+  // Müziği yüklüyoruz
+  technoMusic = loadSound(GameConfig.music.src);
+}
 
 function setup() {
-  createCanvas(canvasSize, 400, WEBGL);
-  pixelDensity(1);
+  // Ana canvas'ı oluşturuyoruz
+  createCanvas(GameConfig.canvas.size, 400, WEBGL);
+  pixelDensity(GameConfig.canvas.pixelDensity);
   colorMode(RGB, 255, 255, 255, 1);
-  
-  // ColorPalette instance
-  colorPalette = new ColorPalette();
-  
-  // Set colors
-  colours = [
-    color(8, 44, 127), // Night blue
-    color(0, 255, 248), // Neon blue
-    color(255, 0, 253), // Neon pink
-    color(0, 29, 95),   // Dark blue
-  ];
 
-  // Sky instance
-  let skyInstance = new Sky(860, 430 * 1.2, 100);  // 100 yıldız ile sky oluşturuluyor
-  
-  // Terrain instance
-  let terrainInstance = new Terrain(70, 15, 40, 150, 5, color(102, 0, 102), color(0, 255, 248)); 
-  
-  // Ground instance
-  let groundInstance = new Ground(70, 1000, 3, 5, colorPalette);
-  
-  // Environment instance (Sky, Terrain ve Ground gönderiliyor)
-  environment = new Environment(skyInstance, terrainInstance, groundInstance);
-  
-  // Initialize player
-  player = new Player(lanePositions, false); // Trail devre dışı bırakıldı
+
+
+  // Environment, Player ve Platform nesnelerini oluşturuyoruz
+  environment = new Environment(
+    new Sky(GameConfig.sky),
+    new Terrain(GameConfig.terrain),
+    new Ground(GameConfig.ground)
+  );
+  player = new Player(GameConfig.player);
+  platform = new Platform(GameConfig.platform);
 }
 
 function draw() {
-  background(colours[3]);
+  background(GameConfig.colors.background);  // Arka plan rengini config'ten alıyoruz
 
-  fps = frameRate();
+  // Amplitüd ile oyun hızını dinamik olarak ayarlıyoruz
 
+  // Kamerayı oyuncuya göre ayarlıyoruz
+  cameraX = lerp(cameraX, player.x, 0.1);
   cam = createCamera();
-  cam.setPosition(0, -80, 380);
-  cam.lookAt(0, -70, 0);
+  cam.setPosition(cameraX, -30, 100);
+  cam.lookAt(cameraX, -30, 0);
 
-  let activeLaneIndex = player.currentLane; // player'ın bulunduğu şerit
-
-  environment.update();  // Environment (Sky, Terrain, Ground) güncelleniyor
-  environment.display(activeLaneIndex);  // Environment çiziliyor
-
-  push();
+  // Player ve platformları çiziyoruz
   player.draw();
-  pop();
 
-  updateStats();
+  platforms.forEach((platform) => {
+    platform.move(gameSpeed * -1);
+    platform.draw();
+
+    if (platform.position.x < GameConfig.platformsProps.resetX) {
+      platform.position.x = GameConfig.platformsProps.startX;
+    }
+  });
+
+  // Ortam ve hız güncellemesi
+  environment.update(gameSpeed);
+  environment.display(player.currentLane);
+
+
+  updateStats(gameSpeed);
 }
 
+// Klavye ile şerit değiştirme
 function keyPressed() {
   if (keyCode === LEFT_ARROW) {
     player.move('left');
@@ -71,27 +73,11 @@ function keyPressed() {
   }
 }
 
-function drawAxis() {
-  strokeWeight(4);
-  
-  // X-axis (Red)
-  stroke(255, 0, 0); // Red for X axis
-  line(0, 0, 0, 100, 0, 0);
-
-  // Y-axis (Green)
-  stroke(0, 255, 0); // Green for Y axis
-  line(0, 0, 0, 0, 100, 0);
-
-  // Z-axis (Blue)
-  stroke(0, 0, 255); // Blue for Z axis
-  line(0, 0, 0, 0, 0, 100);
+// Oyun istatistiklerini güncelleyen fonksiyon
+function updateStats(gameSpeed) {
+  document.getElementById('speedDisplay').innerHTML = `Speed: ${(gameSpeed ).toFixed(0)}`;  // Nokta kaldırıldı
+  document.getElementById('fpsDisplay').innerHTML = `FPS: ${frameRate().toFixed(0)}`;           // FPS'de de nokta kaldırıldı
+  document.getElementById('score').innerHTML = `Score: ${score}`;  // Skor zaten tam sayı
 }
 
-function updateStats() {
-  // HTML üzerinden FPS değerini göster
-  document.getElementById('fpsDisplay').innerHTML = `FPS: ${nf(fps, 2, 1)}`;
-  // HTML üzerinden hızı göster
-  document.getElementById('speedDisplay').innerHTML = `Speed: ${speed}`;
-  // HTML üzerinden skoru göster
-  document.getElementById('score').innerHTML = `Score: ${score}`;
-}
+

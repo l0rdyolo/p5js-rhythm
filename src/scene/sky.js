@@ -1,8 +1,8 @@
 class Sky {
-  constructor(width, height, starCount) {
-    this.width = width;
-    this.height = height;
-    this.starCount = starCount;
+  constructor(config) {
+    this.width = config.width;
+    this.height = config.height;
+    this.starCount = config.starCount;
     this.canvasSky = this.createSky();  // Gökyüzü önceden hazırlanıyor
   }
 
@@ -19,9 +19,10 @@ class Sky {
 
   display() {
     push();
-    translate(0, -400, -2000);
+    translate(0, -400, -1500);
+    noStroke();
     texture(this.canvasSky);
-    plane(3400, 2600);
+    plane(3000,2000);
     pop();
   }
 }

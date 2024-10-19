@@ -1,13 +1,12 @@
 class Environment {
   constructor(sky, terrain, ground) {
-    this.sky = sky;         // Sky instance
-    this.terrain = terrain; // Terrain instance
-    this.ground = ground;   // Ground instance
+    this.sky = sky;         
+    this.terrain = terrain; 
+    this.ground = ground;   
   }
 
-  update() {
-    this.terrain.update();  // Terrain güncelleniyor
-    // Ground burada güncellenebilir (ihtiyaç varsa)
+  update(gameSpeed) {
+    this.terrain.update(gameSpeed);  // Terrain güncelleniyor
   }
 
   display(activeLaneIndex) {
