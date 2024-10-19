@@ -20,7 +20,7 @@ class Ground {
 
   draw(activeLaneIndex) {
     push();
-    translate(0, -50, -500); 
+    translate(0, 0, -1500); 
 
     for (let i = 0; i < this.laneCount; i++) {
       push();

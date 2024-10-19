@@ -10,7 +10,7 @@ class Terrain {
     this.terrain = [];
     this.rowPosition = 0;
     this.flying = 0;
-    this.flyingSpeed = 6;
+    this.flyingSpeed = 1;
     this.initializeTerrain();
   }
 
