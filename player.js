@@ -25,61 +25,6 @@ class Player {
   draw() {
     // Smooth movement for the player
     this.x = lerp(this.x, this.targetX, this.lerpAmount);
-
-    // Trail effect calculations only if trail is enabled
-    if (this.enableTrail) {
-      // Main trail of the player
-      this.trail.push({ x: this.x, y: this.y, z: this.z });
-
-      if (this.trail.length > this.trailLength) {
-        this.trail.shift();  
-      }
-
-      // Offset trails behind the car
-      for (let i = 0; i < this.offsetTrails.length; i++) {
-        this.offsetTrails[i].trail.push({
-          x: this.x + this.offsetTrails[i].offsetX,  
-          y: this.y,
-          z: this.z
-        });
-
-        if (this.offsetTrails[i].trail.length > this.trailLength) {
-          this.offsetTrails[i].trail.shift();  
-        }
-      }
-
-      // Move trails forward as the car moves
-      for (let i = 0; i < this.trail.length; i++) {
-        this.trail[i].z += this.trailSpeed;  
-      }
-
-      for (let i = 0; i < this.offsetTrails.length; i++) {
-        for (let j = 0; j < this.offsetTrails[i].trail.length; j++) {
-          this.offsetTrails[i].trail[j].z += this.trailSpeed;
-        }
-      }
-
-      // Draw the main trail
-      this.drawTrail(this.trail, color(255));
-
-      // Draw the offset trails with sine wave effect
-      for (let i = 0; i < this.offsetTrails.length; i++) {
-        this.drawTrailWithSineWave(
-          this.offsetTrails[i].trail, 
-          color(150), 
-          this.offsetTrails[i].amplitude, 
-          this.offsetTrails[i].frequency, 
-          this.offsetTrails[i].waveOffset
-        );
-      }
-
-      // Update the wave offset for sine wave trail
-      for (let i = 0; i < this.offsetTrails.length; i++) {
-        this.offsetTrails[i].waveOffset += this.offsetTrails[i].frequency;  
-      }
-    }
-
-    // Draw the player car
     this.drawCar();
   }
 
@@ -135,5 +80,62 @@ class Player {
   collidesWith(object) {
     let distance = dist(this.x, this.y, this.z, object.x, object.y, object.z);
     return distance < 50;  
+  }
+
+  trailEnable(){
+    //! delete this
+        // Trail effect calculations only if trail is enabled
+        if (this.enableTrail) {
+          // Main trail of the player
+          this.trail.push({ x: this.x, y: this.y, z: this.z });
+    
+          if (this.trail.length > this.trailLength) {
+            this.trail.shift();  
+          }
+    
+          // Offset trails behind the car
+          for (let i = 0; i < this.offsetTrails.length; i++) {
+            this.offsetTrails[i].trail.push({
+              x: this.x + this.offsetTrails[i].offsetX,  
+              y: this.y,
+              z: this.z
+            });
+    
+            if (this.offsetTrails[i].trail.length > this.trailLength) {
+              this.offsetTrails[i].trail.shift();  
+            }
+          }
+    
+          // Move trails forward as the car moves
+          for (let i = 0; i < this.trail.length; i++) {
+            this.trail[i].z += this.trailSpeed;  
+          }
+    
+          for (let i = 0; i < this.offsetTrails.length; i++) {
+            for (let j = 0; j < this.offsetTrails[i].trail.length; j++) {
+              this.offsetTrails[i].trail[j].z += this.trailSpeed;
+            }
+          }
+    
+          // Draw the main trail
+          this.drawTrail(this.trail, color(255));
+    
+          // Draw the offset trails with sine wave effect
+          for (let i = 0; i < this.offsetTrails.length; i++) {
+            this.drawTrailWithSineWave(
+              this.offsetTrails[i].trail, 
+              color(150), 
+              this.offsetTrails[i].amplitude, 
+              this.offsetTrails[i].frequency, 
+              this.offsetTrails[i].waveOffset
+            );
+          }
+    
+          // Update the wave offset for sine wave trail
+          for (let i = 0; i < this.offsetTrails.length; i++) {
+            this.offsetTrails[i].waveOffset += this.offsetTrails[i].frequency;  
+          }
+        }
+    
   }
 }
