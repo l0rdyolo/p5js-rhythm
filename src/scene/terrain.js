@@ -1,17 +1,16 @@
 class Terrain {
-  constructor(rows, cols, size, altitude, trench, color, strokeColor) {
-    this.rows = rows;
-    this.cols = cols;
-    this.size = size;
-    this.altitude = altitude;
-    this.trench = trench;
-    this.color = color;
-    this.strokeColor = strokeColor;
+  constructor(config) {
+    this.rows = config.rows;                 // Config'ten satır sayısı
+    this.cols = config.cols;                 // Config'ten sütun sayısı
+    this.size = config.size;                 // Config'ten hücre boyutu
+    this.altitude = config.altitude;         // Config'ten dağ yüksekliği
+    this.trench = config.trench;             // Config'ten vadi genişliği
+    this.color = color(...config.color);     // Config'ten terrain rengi
+    this.strokeColor = color(...config.strokeColor);  // Config'ten stroke rengi
     this.terrain = [];
     this.rowPosition = 0;
     this.flying = 0;
     this.initializeTerrain();
-    
   }
 
   initializeTerrain() {
@@ -37,7 +36,7 @@ class Terrain {
   }
 
   update(gameSpeed) {
-    let _flyingSpeed = gameSpeed * 1 
+    let _flyingSpeed = gameSpeed * 1;
     this.flying += _flyingSpeed;
     if (this.flying >= this.size) {
       this.flying = 0;
@@ -55,14 +54,20 @@ class Terrain {
   display() {
     push();
     rotateX(PI / 2);
-
     translate(-220, -2400, -40);
-    fill(this.color); // Terrain rengini al
-    // stroke(this.strokeColor); // Stroke rengini al
-    strokeWeight(2);
+    fill(this.color);  // Terrain rengini ayarladık
+
     for (let y = 0; y < this.rows - 1; y++) {
       beginShape(TRIANGLE_STRIP);
       for (let x = 0; x < this.cols; x++) {
+        // Çukur bölgesi için stroke'u kapatıyoruz
+        if (x === this.trench || x === (this.trench + 1)) {
+          noStroke();
+        } else {
+          stroke(this.strokeColor);  // Diğer bölgeler için stroke uygulanır
+          strokeWeight(2);
+        }
+
         vertex(x * this.size, (y * this.size) + this.flying, this.terrain[y][x]);
         vertex(x * this.size, ((y + 1) * this.size) + this.flying, this.terrain[y + 1][x]);
       }

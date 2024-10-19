@@ -26,22 +26,31 @@
       padding: 15px;
       border-radius: 10px; /* Köşeleri hafif yuvarla */
       width: 120px; /* Kare şeklinde tutmak için genişlik ayarı */
-      height: 200px;
+      height: 150px;
       display: flex;
       flex-direction: column;
       justify-content: space-around;
       align-items: center;
       text-align: center;
     }
+    #soundVisualizer {
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  z-index: 10; /* Üstte durmasını sağlamak için */
+  pointer-events: none; /* Kullanıcı etkileşimini engeller */
+  width: 100%;  /* Canvas genişliğinde olacak */
+  height: 150px; /* Yükseklik belirleyebilirsiniz */
+}
   </style>
 </head>
 <body>
   <div id="stats">
-    <div id="tempoDisplay">Tempo: 0</div>
     <div id="speedDisplay">Speed: 0</div>
     <div id="fpsDisplay">FPS: 0</div>
     <div id="score">Score: 0</div>  <!-- Skoru göstermek için -->
   </div>
+  <div id="soundVisualizer" style="width:680px; height: 200px;"></div>
   <!-- Entities -->
   <script src="src/entities/platform.js"></script>
   <script src="src/entities/obstacle.js"></script>
@@ -49,6 +58,7 @@
   <script src="src/entities/building.js"></script>
   <script src="src/entities/player.js"></script>
 
+  
   <!-- Effects -->
   <script src="src/effects/laneLine.js"></script>
   <script src="src/effects/particle.js"></script>
@@ -61,10 +71,13 @@
   <script src="src/scene/ground.js"></script>
   <script src="src/scene/sky.js"></script>
   <script src="src/scene/terrain.js"></script>
-
+  
   <!-- Utils -->
+  <script src="src/utils/soundVisualizer.js"></script>
   <script src="src/utils/colorPalette.js"></script>
   <script src="src/utils/Color.js"></script>
+
+  <script src="gameConfig.js"></script>
 
   <!-- Main Sketch -->
   <script src="sketch.js"></script>

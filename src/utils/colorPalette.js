@@ -9,7 +9,6 @@ class ColorPalette {
        return color(f(5), f(3), f(1));
      }
    
-     // Function for smooth wave-like color transition, influenced by music
      waveColor(offset, frequency = 0.1) {
        const hue = (this.hueOffset + offset) % 360;
        this.hueOffset += this.hueSpeed;
@@ -20,9 +19,9 @@ class ColorPalette {
        return this.hsvToRgb(hue, saturation, brightness);
      }
    
-     // Update hue speed based on music
+
      updateHueSpeed(speed) {
-       this.hueSpeed = map(speed, 7, 15, 0.1, 0.5);  // Faster transition at higher speeds
+       this.hueSpeed = map(speed, 7, 15, 0.1, 0.5);  
      }
    }
    

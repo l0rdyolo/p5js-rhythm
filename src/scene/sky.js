@@ -1,8 +1,8 @@
 class Sky {
-  constructor(width, height, starCount) {
-    this.width = width;
-    this.height = height;
-    this.starCount = starCount;
+  constructor(config) {
+    this.width = config.width;
+    this.height = config.height;
+    this.starCount = config.starCount;
     this.canvasSky = this.createSky();  // Gökyüzü önceden hazırlanıyor
   }
 

@@ -1,15 +1,18 @@
 class Platform {
-  constructor(startX, startY, startZ, gap, collectableSize, obstacleSize, grid) {
-    this.position = createVector(startX, startY, startZ);  // Platformun merkezi pozisyonu
-    this.gap = gap;  // Aradaki boşluk
-    this.collectableSize = collectableSize;
-    this.obstacleSize = obstacleSize;
+  constructor(config) {
+    this.position = createVector(
+      config.startX,
+      config.startY,
+      config.startZ
+    ); // Platformun merkezi pozisyonu
+    this.gap = config.gap;  // Aradaki boşluk
+    this.collectableSize = config.collectableSize;
+    this.obstacleSize = config.obstacleSize;
     this.collectables = [];
     this.obstacles = [];
-    this.grid = grid;  // Matris şeklindeki girdi
+    this.grid = config.grid;  // Matris şeklindeki girdi
 
-
-    this.resetX = 3000;
+    this.resetX = config.resetX || 3000;  // Varsayılan reset pozisyonu
 
     this.setup();
   }
