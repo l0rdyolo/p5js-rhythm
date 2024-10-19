@@ -36,8 +36,6 @@ class Terrain {
   }
 
   update(gameSpeed) {
-    console.log(gameSpeed);
-    
     this.flying += gameSpeed;
     if (this.flying >= this.size) {
       this.flying = 0;
