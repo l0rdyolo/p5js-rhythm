@@ -10,8 +10,8 @@ class Terrain {
     this.terrain = [];
     this.rowPosition = 0;
     this.flying = 0;
-    this.flyingSpeed = 1;
     this.initializeTerrain();
+    
   }
 
   initializeTerrain() {
@@ -36,8 +36,9 @@ class Terrain {
     return point;
   }
 
-  update() {
-    this.flying += this.flyingSpeed;
+  update(gameSpeed) {
+    let _flyingSpeed = gameSpeed * 1 
+    this.flying += _flyingSpeed;
     if (this.flying >= this.size) {
       this.flying = 0;
       this.terrain.pop();
@@ -53,10 +54,11 @@ class Terrain {
 
   display() {
     push();
-    rotateX(PI / 2.12);
-    translate(-220, -1600);
+    rotateX(PI / 2);
+
+    translate(-220, -2400, -40);
     fill(this.color); // Terrain rengini al
-    stroke(this.strokeColor); // Stroke rengini al
+    // stroke(this.strokeColor); // Stroke rengini al
     strokeWeight(2);
     for (let y = 0; y < this.rows - 1; y++) {
       beginShape(TRIANGLE_STRIP);

@@ -25,8 +25,8 @@
       background-color: rgba(0, 0, 0, 0.8); /* Siyah arka plan (şeffaf) */
       padding: 15px;
       border-radius: 10px; /* Köşeleri hafif yuvarla */
-      width: 100px; /* Kare şeklinde tutmak için genişlik ayarı */
-      height: 80px;
+      width: 120px; /* Kare şeklinde tutmak için genişlik ayarı */
+      height: 200px;
       display: flex;
       flex-direction: column;
       justify-content: space-around;
@@ -37,11 +37,11 @@
 </head>
 <body>
   <div id="stats">
+    <div id="tempoDisplay">Tempo: 0</div>
     <div id="speedDisplay">Speed: 0</div>
     <div id="fpsDisplay">FPS: 0</div>
     <div id="score">Score: 0</div>  <!-- Skoru göstermek için -->
   </div>
-  
   <!-- Entities -->
   <script src="src/entities/platform.js"></script>
   <script src="src/entities/obstacle.js"></script>
@@ -54,7 +54,7 @@
   <script src="src/effects/particle.js"></script>
   
   <!-- Managers -->
-  <script src="src/managers/laneLineManager.js"></script>
+  <!-- <script src="src/managers/laneLineManager.js"></script> -->
   <script src="src/managers/environment.js"></script>
   
   <!-- Scene -->

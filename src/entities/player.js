@@ -4,7 +4,7 @@ class Player {
     this.currentLane = 1; 
     this.x = this.lanePositions[this.currentLane]; 
     this.y = -10;
-    this.z = 430;
+    this.z = 30;
     this.size = {x:10,y:10,z:20}
     this.targetX = this.x;
     this.trail = [];  

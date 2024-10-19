@@ -5,12 +5,12 @@ class Environment {
     this.ground = ground;   // Ground instance
   }
 
-  update() {
-    this.terrain.update();  // Terrain güncelleniyor
+  update(gameSpeed) {
+    this.terrain.update(gameSpeed);  // Terrain güncelleniyor
     // Ground burada güncellenebilir (ihtiyaç varsa)
   }
 
-  display(activeLaneIndex) {
+  display(activeLaneIndex , gameSpeed) {
     this.sky.display();     // Gökyüzü gösteriliyor
     this.terrain.display(); // Terrain gösteriliyor
     this.ground.draw(activeLaneIndex);  // Ground çiziliyor

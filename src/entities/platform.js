@@ -8,6 +8,9 @@ class Platform {
     this.obstacles = [];
     this.grid = grid;  // Matris şeklindeki girdi
 
+
+    this.resetX = 3000;
+
     this.setup();
   }
 
@@ -63,6 +66,6 @@ class Platform {
   }
 
   resetPosition() {
-    this.position.x = 1000;  // Reset pozisyonu
+    this.position.x = this.resetX;  // Reset pozisyonu
   }
 }
