@@ -1,11 +1,10 @@
 let canvasSize = 680;
-let terrain;
-let sky;
+let environment;
 let player;
 let colours;
 let lanePositions = [-40, 0, 40]; // X positions for the 3 lanes
 
-let ground;
+let colorPalette;
 
 let score = 0;
 let fps = 0;
@@ -15,7 +14,10 @@ function setup() {
   createCanvas(canvasSize, 400, WEBGL);
   pixelDensity(1);
   colorMode(RGB, 255, 255, 255, 1);
-
+  
+  // ColorPalette instance
+  colorPalette = new ColorPalette();
+  
   // Set colors
   colours = [
     color(8, 44, 127), // Night blue
@@ -24,50 +26,41 @@ function setup() {
     color(0, 29, 95),   // Dark blue
   ];
 
-  // Initialize terrain and sky
-  terrain = new Terrain(50, 13, 40, 200, 5);
-  sky = new Sky(3400, 2600, 1000);  // Sky with gradient and stars
-  ground = new Ground(70, 1000, 3, 5);
+  // Sky instance
+  let skyInstance = new Sky(860, 430 * 1.2, 100);  // 100 yıldız ile sky oluşturuluyor
+  
+  // Terrain instance
+  let terrainInstance = new Terrain(70, 15, 40, 150, 5, color(102, 0, 102), color(0, 255, 248)); 
+  
+  // Ground instance
+  let groundInstance = new Ground(70, 1000, 3, 5, colorPalette);
+  
+  // Environment instance (Sky, Terrain ve Ground gönderiliyor)
+  environment = new Environment(skyInstance, terrainInstance, groundInstance);
+  
   // Initialize player
   player = new Player(lanePositions, false); // Trail devre dışı bırakıldı
-
 }
 
 function draw() {
-  background(colours[0]);
+  background(colours[3]);
 
   fps = frameRate();
-  // Draw sky and sun with proper positioning
-  push();
-  translate(0, -400, -2000);
-  sky.display();  // Sky background with stars
-  sky.displaySun();  // Sun
-  pop();
-
-  // Camera and terrain setup
 
   cam = createCamera();
   cam.setPosition(0, -80, 380);
   cam.lookAt(0, -70, 0);
-  // Terrain styling
-  fill(colours[3]);
-  stroke(colours[1]);
-  strokeWeight(3);
 
-  // Update and display terrain
-  terrain.update();
-  terrain.display();
   let activeLaneIndex = player.currentLane; // player'ın bulunduğu şerit
 
-  // Ground ve Player çizimi
-  ground.draw(activeLaneIndex);
-  // Display player
+  environment.update();  // Environment (Sky, Terrain, Ground) güncelleniyor
+  environment.display(activeLaneIndex);  // Environment çiziliyor
+
   push();
   player.draw();
   pop();
 
   updateStats();
-
 }
 
 function keyPressed() {
@@ -93,6 +86,7 @@ function drawAxis() {
   stroke(0, 0, 255); // Blue for Z axis
   line(0, 0, 0, 0, 0, 100);
 }
+
 function updateStats() {
   // HTML üzerinden FPS değerini göster
   document.getElementById('fpsDisplay').innerHTML = `FPS: ${nf(fps, 2, 1)}`;
