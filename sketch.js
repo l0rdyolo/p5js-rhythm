@@ -10,14 +10,18 @@ let fps = 0;
 let speed = 4;
 
 let platform;
-
+let gameSpeed;
 let cameraX = 0;  // Kamera x konumu
-
+let grid = [
+  [0, 1, 0],  // 1: Collectable
+  [0, 1, 0],  // 1: Collectable
+  [0, 1, 2]   // 1: Collectable, 2: Obstacle
+];
 function setup() {
   createCanvas(canvasSize, 400, WEBGL);
   pixelDensity(1);
   colorMode(RGB, 255, 255, 255, 1);
-  
+  gameSpeed =5;
   colorPalette = new ColorPalette();
   colours = [
     color(8, 44, 127),
@@ -25,7 +29,7 @@ function setup() {
     color(255, 0, 253),
     color(0, 29, 95),
   ];
-  platform = new Platform(0,-10, 0, 50, 8, 10);
+  platform = new Platform(0,-10, -60, 50, 8, 10,grid);
   let skyInstance = new Sky(860, 430 * 1.2, 100);
   let terrainInstance = new Terrain(70, 15, 40, 150, 5, color(102, 0, 102), color(0, 255, 248)); 
   let groundInstance = new Ground(120, 2000, 3, 5, colorPalette);
@@ -50,7 +54,7 @@ function draw() {
 
   let activeLaneIndex = player.currentLane;
   player.draw();
-  platform.move(-5); 
+  platform.move(gameSpeed * -1); 
   platform.draw(); 
 
   environment.update();

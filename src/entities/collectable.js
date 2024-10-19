@@ -9,21 +9,23 @@ class Collectable {
     this.colorSpeed = 0.02;  // Renk geçiş hızı
   }
 
-  move(platformX) {
+  move(platformPos) {
     // Collectable pozisyonunu platformun pozisyonuna göre günceller
-    this.x = platformX + this.offset.x;
+    this.x = platformPos.x + this.offset.x;
+    this.y = platformPos.y + this.offset.y;
+    this.z = platformPos.z + this.offset.z;
   }
 
-  draw(platformPos) {
+  draw() {
     // Basit nefes alma animasyonu (büyüme/küçülme)
-    this.size = this.baseSize + sin(this.scaleOffset) * 5;
-    this.scaleOffset += this.scaleSpeed;
+    // this.size = this.baseSize + sin(this.scaleOffset) * 5;
+    // this.scaleOffset += this.scaleSpeed;
 
     push();
-    translate(platformPos.x + this.offset.x, platformPos.y + this.offset.y, platformPos.z + this.offset.z);
-    fill(255, 0, 0);  // Rastgele bir renk örneği
+    translate(this.x, this.y, this.z);  // Collectable'ı güncel pozisyonuna göre çizer
+    fill(255, 0, 0);  // Rastgele bir renk örneği (kırmızı)
     noStroke();
-    sphere(this.size);
+    sphere(this.size);  // Collectable'ın şekli (küre)
     pop();
   }
 }
