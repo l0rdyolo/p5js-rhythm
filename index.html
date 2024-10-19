@@ -4,8 +4,8 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>rhythm</title>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.4.0/p5.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.4.0/addons/p5.sound.min.js"></script>
+  <script src="lib/p5.js"></script>
+  <script src="lib/p5.sound.min.js"></script>
   <style>
     canvas {
       display: block;
@@ -20,9 +20,28 @@
       position: absolute;
       top: 10px;
       left: 10px;
-      font-size: 31px;
-      color: rgb(255, 255, 255);
+      font-size: 22px;
+      color: rgb(102, 255, 102); /* Açık yeşil yazı rengi */
+      background-color: rgba(0, 0, 0, 0.8); /* Siyah arka plan (şeffaf) */
+      padding: 15px;
+      border-radius: 10px; /* Köşeleri hafif yuvarla */
+      width: 120px; /* Kare şeklinde tutmak için genişlik ayarı */
+      height: 150px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-around;
+      align-items: center;
+      text-align: center;
     }
+    #soundVisualizer {
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  z-index: 10; /* Üstte durmasını sağlamak için */
+  pointer-events: none; /* Kullanıcı etkileşimini engeller */
+  width: 100%;  /* Canvas genişliğinde olacak */
+  height: 150px; /* Yükseklik belirleyebilirsiniz */
+}
   </style>
 </head>
 <body>
@@ -31,15 +50,36 @@
     <div id="fpsDisplay">FPS: 0</div>
     <div id="score">Score: 0</div>  <!-- Skoru göstermek için -->
   </div>
+  <div id="soundVisualizer" style="width:680px; height: 200px;"></div>
+  <!-- Entities -->
+  <script src="src/entities/platform.js"></script>
+  <script src="src/entities/obstacle.js"></script>
+  <script src="src/entities/collectable.js"></script>
+  <script src="src/entities/building.js"></script>
+  <script src="src/entities/player.js"></script>
+
   
-  <script src="obstacle.js"></script>
-  <script src="laneLineManager.js"></script>
-  <script src="collectable.js"></script>
-  <script src="player.js"></script>
-  <script src="laneLine.js"></script>
-  <script src="building.js"></script>
-  <script src="ground.js"></script>
-  <script src="Color.js"></script>
+  <!-- Effects -->
+  <script src="src/effects/laneLine.js"></script>
+  <script src="src/effects/particle.js"></script>
+  
+  <!-- Managers -->
+  <!-- <script src="src/managers/laneLineManager.js"></script> -->
+  <script src="src/managers/environment.js"></script>
+  
+  <!-- Scene -->
+  <script src="src/scene/ground.js"></script>
+  <script src="src/scene/sky.js"></script>
+  <script src="src/scene/terrain.js"></script>
+  
+  <!-- Utils -->
+  <script src="src/utils/soundVisualizer.js"></script>
+  <script src="src/utils/colorPalette.js"></script>
+  <script src="src/utils/Color.js"></script>
+
+  <script src="gameConfig.js"></script>
+
+  <!-- Main Sketch -->
   <script src="sketch.js"></script>
 </body>
 </html>
