@@ -1,77 +1,66 @@
-let cam;
-let ground;
-let backgroundLayer;
+let canvasSize = 680;
+let environment;
 let player;
-let collectables = [];
-let obstacles = [];
-let speed = 5;
-let gameStarted = false;
-let totalObstacles = 8;
-let totalCollectables = 15;
+let colours;
+let lanePositions = [-40, 0, 40]; // X positions for the 3 lanes
+
+let colorPalette;
+
 let score = 0;
-
-let buildings = [];
-let totalBuildings = 10;
-let buildingDistance = 400;
-
-let fps = 0;  // FPS sayacı
-
-let technoMusic, kickSound, amp;
-
-function preload() {
-  technoMusic = loadSound('tecno.mp3');
-  kickSound = loadSound('kick.mp3');
-}
+let fps = 0;
+let speed = 4;
 
 function setup() {
-  createCanvas(860, 430 * 1.2, WEBGL);
+  createCanvas(canvasSize, 400, WEBGL);
   pixelDensity(1);
   colorMode(RGB, 255, 255, 255, 1);
-  cam = createCamera();
-  cam.setPosition(0, -50, 200);
-  cam.lookAt(0, 0, 0);
+  
+  // ColorPalette instance
+  colorPalette = new ColorPalette();
+  
+  // Set colors
+  colours = [
+    color(8, 44, 127), // Night blue
+    color(0, 255, 248), // Neon blue
+    color(255, 0, 253), // Neon pink
+    color(0, 29, 95),   // Dark blue
+  ];
 
-  backgroundLayer = new Background();
-  ground = new Ground(600, 10000);
-  player = new Player(0);
-
-  // Binalar
-  for (let i = 0; i < totalBuildings; i++) {
-    let leftSide = new Building(-300, random(-3000, -500), random(100, 300), random(50, 100));
-    let rightSide = new Building(300, random(-3000, -500), random(100, 300), random(50, 100));
-    buildings.push(leftSide, rightSide);
-  }
-
-  startGame();
+  // Sky instance
+  let skyInstance = new Sky(860, 430 * 1.2, 100);  // 100 yıldız ile sky oluşturuluyor
+  
+  // Terrain instance
+  let terrainInstance = new Terrain(70, 15, 40, 150, 5, color(102, 0, 102), color(0, 255, 248)); 
+  
+  // Ground instance
+  let groundInstance = new Ground(70, 1000, 3, 5, colorPalette);
+  
+  // Environment instance (Sky, Terrain ve Ground gönderiliyor)
+  environment = new Environment(skyInstance, terrainInstance, groundInstance);
+  
+  // Initialize player
+  player = new Player(lanePositions, false); // Trail devre dışı bırakıldı
 }
 
 function draw() {
-  // FPS hesaplama
+  background(colours[3]);
+
   fps = frameRate();
 
-  background(Color.DeepBlack.rgb);
+  cam = createCamera();
+  cam.setPosition(0, -80, 380);
+  cam.lookAt(0, -70, 0);
 
-  // Işıklandırma
-  ambientLight(50, 50, 50);
-  pointLight(255, 255, 255, 0, -300, 400);
-  directionalLight(255, 255, 255, 0.5, 0.5, -1);
+  let activeLaneIndex = player.currentLane; // player'ın bulunduğu şerit
 
-  // Zemin ve oyuncu çizimi
-  backgroundLayer.draw();
-  ground.draw(player);
+  environment.update();  // Environment (Sky, Terrain, Ground) güncelleniyor
+  environment.display(activeLaneIndex);  // Environment çiziliyor
+
+  push();
   player.draw();
+  pop();
 
-  // HTML FPS göstergesi
   updateStats();
-}
-
-function updateStats() {
-  // HTML üzerinden FPS değerini göster
-  document.getElementById('fpsDisplay').innerHTML = `FPS: ${nf(fps, 2, 1)}`;
-  // HTML üzerinden hızı göster
-  document.getElementById('speedDisplay').innerHTML = `Speed: ${speed}`;
-  // HTML üzerinden skoru göster
-  document.getElementById('score').innerHTML = `Score: ${score}`;
 }
 
 function keyPressed() {
@@ -82,6 +71,27 @@ function keyPressed() {
   }
 }
 
-function startGame() {
-  gameStarted = true;
+function drawAxis() {
+  strokeWeight(4);
+  
+  // X-axis (Red)
+  stroke(255, 0, 0); // Red for X axis
+  line(0, 0, 0, 100, 0, 0);
+
+  // Y-axis (Green)
+  stroke(0, 255, 0); // Green for Y axis
+  line(0, 0, 0, 0, 100, 0);
+
+  // Z-axis (Blue)
+  stroke(0, 0, 255); // Blue for Z axis
+  line(0, 0, 0, 0, 0, 100);
+}
+
+function updateStats() {
+  // HTML üzerinden FPS değerini göster
+  document.getElementById('fpsDisplay').innerHTML = `FPS: ${nf(fps, 2, 1)}`;
+  // HTML üzerinden hızı göster
+  document.getElementById('speedDisplay').innerHTML = `Speed: ${speed}`;
+  // HTML üzerinden skoru göster
+  document.getElementById('score').innerHTML = `Score: ${score}`;
 }
