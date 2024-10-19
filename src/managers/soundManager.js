@@ -5,7 +5,7 @@ class SoundManager {
 
        this.setup();
      }
-   
+     
      setup() {
        this.music.loop();
      }

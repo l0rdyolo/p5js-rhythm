@@ -55,18 +55,11 @@ class Terrain {
     rotateX(PI / 2);
     translate(-220, -2400, -40);
     fill(this.color);  // Terrain rengini ayarladık
-
+    stroke(255);
     for (let y = 0; y < this.rows - 1; y++) {
       beginShape(TRIANGLE_STRIP);
       for (let x = 0; x < this.cols; x++) {
         // Çukur bölgesi için stroke'u kapatıyoruz
-        if (x === this.trench || x === (this.trench + 1)) {
-          noStroke();
-        } else {
-          stroke(this.strokeColor);  // Diğer bölgeler için stroke uygulanır
-          strokeWeight(2);
-        }
-
         vertex(x * this.size, (y * this.size) + this.flying, this.terrain[y][x]);
         vertex(x * this.size, ((y + 1) * this.size) + this.flying, this.terrain[y + 1][x]);
       }

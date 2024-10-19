@@ -40,7 +40,7 @@ const GameConfig = {
           size: 40,            // Hücre boyutu
           altitude: 150,       // Dağlık bölgelerin yüksekliği
           trench: 5,           // Vadi genişliği
-          color: [0, 0, 222],       // Terrain rengi (RGB formatında)
+          color: [0, 120, 222],       // Terrain rengi (RGB formatında)
           strokeColor: [255, 255, 255]  // Stroke rengi (RGB formatında)
         },
      colors: {

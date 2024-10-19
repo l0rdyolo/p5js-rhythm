@@ -2,11 +2,10 @@ let environment;
 let player;
 let platform;
 let soundManager;
-let gameSpeed;
+let gameSpeed = 3;
 let cameraX = 0;
 let technoMusic;
 let score = 0;
-let platforms = [];
 
 const BASE_SPEED = 10;
 const MAX_SPEED = 30;
@@ -28,7 +27,6 @@ function setup() {
     new Ground(GameConfig.ground)
   );
   player = new Player(GameConfig.player);
-  platform = new Platform(GameConfig.platform);
 }
 
 function draw() {
@@ -39,15 +37,6 @@ function draw() {
   cam.lookAt(cameraX, -30, 0);
 
   player.draw();
-
-  platforms.forEach((platform) => {
-    platform.move(gameSpeed * -1);
-    platform.draw();
-
-    if (platform.position.x < GameConfig.platformsProps.resetX) {
-      platform.position.x = GameConfig.platformsProps.startX;
-    }
-  });
 
   environment.update(gameSpeed);  
   environment.display(player.currentLane);
