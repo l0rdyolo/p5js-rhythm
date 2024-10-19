@@ -1,10 +1,9 @@
 let environment;
 let player;
 let platform;
-let gameSpeed;
+let gameSpeed =  5;
 let cameraX = 0;
 let technoMusic;
-let soundVisualizer;
 let score = 0;
 let platforms = [];
 
@@ -22,9 +21,7 @@ function setup() {
   pixelDensity(GameConfig.canvas.pixelDensity);
   colorMode(RGB, 255, 255, 255, 1);
 
-  // SoundVisualizer nesnesini başlatıyoruz, müziği parametre olarak veriyoruz
-  soundVisualizer = new SoundVisualizer(technoMusic, GameConfig.canvas.size, 200);
-  soundVisualizer.setup();  // Müzik döngüye alınıyor ve analiz başlıyor
+
 
   // Environment, Player ve Platform nesnelerini oluşturuyoruz
   environment = new Environment(
@@ -40,8 +37,6 @@ function draw() {
   background(GameConfig.colors.background);  // Arka plan rengini config'ten alıyoruz
 
   // Amplitüd ile oyun hızını dinamik olarak ayarlıyoruz
-  let level = soundVisualizer.amplitude.getLevel();
-  gameSpeed = map(level, 0, 1, BASE_SPEED, MAX_SPEED);  // Ses seviyesine göre hız ayarı (min 10, max 30)
 
   // Kamerayı oyuncuya göre ayarlıyoruz
   cameraX = lerp(cameraX, player.x, 0.1);
@@ -65,10 +60,7 @@ function draw() {
   environment.update(gameSpeed);
   environment.display(player.currentLane);
 
-  // Ses dalgalarını ve frekans spektrumunu HTML'deki div'e çiziyoruz
-  soundVisualizer.draw();
 
-  // Oyun istatistiklerini güncelliyoruz
   updateStats(gameSpeed);
 }
 
@@ -83,7 +75,7 @@ function keyPressed() {
 
 // Oyun istatistiklerini güncelleyen fonksiyon
 function updateStats(gameSpeed) {
-  document.getElementById('speedDisplay').innerHTML = `Speed: ${(gameSpeed * 10).toFixed(0)}`;  // Nokta kaldırıldı
+  document.getElementById('speedDisplay').innerHTML = `Speed: ${(gameSpeed ).toFixed(0)}`;  // Nokta kaldırıldı
   document.getElementById('fpsDisplay').innerHTML = `FPS: ${frameRate().toFixed(0)}`;           // FPS'de de nokta kaldırıldı
   document.getElementById('score').innerHTML = `Score: ${score}`;  // Skor zaten tam sayı
 }
