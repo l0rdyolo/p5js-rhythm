@@ -62,6 +62,7 @@ function draw() {
 
   platforms.forEach(platform => {
     platform.move(gameSpeed);  // Player'a doğru hareket
+    platform.checkCollisions(player);
     platform.draw();
   });
 

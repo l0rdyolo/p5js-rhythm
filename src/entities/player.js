@@ -1,29 +1,17 @@
 class Player {
-  constructor(config , lanePositions) { // Enable trail with a default value
+  constructor(config, lanePositions) {
     this.lanePositions = lanePositions; 
     this.currentLane = 1; 
     this.x = this.lanePositions[this.currentLane]; 
     this.y = -10;
     this.z = 30;
-    this.size = {x:10,y:10,z:20}
-    this.targetX = this.x;
-    this.trail = [];  
-    this.trailLength = 20;  
-    this.trailSpeed = 10;  
-    this.lerpAmount = 0.1;  
-
-    // Trail effects for the car
-    this.offsetTrails = [
-      { offsetX: -3, trail: [], amplitude: random(5, 7), frequency: random(0.02, 1), waveOffset: random(100) },  
-      { offsetX: 3, trail: [], amplitude: random(5, 7), frequency: random(0.02, 1), waveOffset: random(100) },   
-      { offsetX: -5, trail: [], amplitude: random(5, 7), frequency: random(0.02, 1), waveOffset: random(100) },  
-      { offsetX: 5, trail: [], amplitude: random(5, 7), frequency: random(0.02, 1), waveOffset: random(100) }    
-    ];
+    this.size = { x: 10, y: 10, z: 20 };  // Car body size (width, height, depth)
+    this.targetX = this.x; 
+    this.lerpAmount = 0.1;  // Smoothing factor for lane movement
   }
 
   draw() {
-    // Smooth movement for the player
-    this.x = lerp(this.x, this.targetX, this.lerpAmount);
+    this.x = lerp(this.x, this.targetX, this.lerpAmount);  // Smooth lane switching
     this.drawCar();
   }
 
@@ -32,10 +20,9 @@ class Player {
     translate(this.x, this.y, this.z);
     rotateY(HALF_PI);  // Rotate the car model to face forward
 
-    // Car body
     fill(15, 25, 20);
     noStroke();  
-    box(this.size.x,this.size.y,this.size.z);  // Car body size
+    box(this.size.x, this.size.y, this.size.z);  // Car body size
 
     pop();
   }
@@ -50,10 +37,30 @@ class Player {
     this.targetX = this.lanePositions[this.currentLane]; 
   }
 
-  // Check collision with another object
-  collidesWith(object) {
-    let distance = dist(this.x, this.y, this.z, object.x, object.y, object.z);
-    return distance < 50;  
+  // Get the bounding box of the player (for collision detection)
+  getBoundingBox() {
+    return {
+      minX: this.x - this.size.x / 2,
+      maxX: this.x + this.size.x / 2,
+      minY: this.y - this.size.y / 2,
+      maxY: this.y + this.size.y / 2,
+      minZ: this.z - this.size.z / 2,
+      maxZ: this.z + this.size.z / 2
+    };
   }
 
+  // Check for collision with another object that has a bounding box
+  checkCollision(target) {
+    let playerBox = this.getBoundingBox();
+    let targetBox = target.getBoundingBox();
+
+    return !(
+      playerBox.maxX < targetBox.minX ||
+      playerBox.minX > targetBox.maxX ||
+      playerBox.maxY < targetBox.minY ||
+      playerBox.minY > targetBox.maxY ||
+      playerBox.maxZ < targetBox.minZ ||
+      playerBox.minZ > targetBox.maxZ
+    );
+  }
 }
