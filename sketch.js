@@ -2,10 +2,13 @@ let environment;
 let player;
 let platform;
 let soundManager;
-let gameSpeed = 3;
+let gameSpeed = 2;
 let cameraX = 0;
 let technoMusic;
 let score = 0;
+
+let platforms = [];
+let platformGap = 20; 
 
 const BASE_SPEED = 10;
 const MAX_SPEED = 30;
@@ -15,11 +18,20 @@ function preload() {
 }
 
 function setup() {
+
+  
   createCanvas(GameConfig.canvas.size, 400, WEBGL);
   pixelDensity(GameConfig.canvas.pixelDensity);
   colorMode(RGB, 255, 255, 255, 1);
 
   soundManager = new SoundManager(technoMusic);
+
+  for (let i = 0; i < platformsPrefabs.length; i++) {
+    let startZ = (i * (platformGap * 4) ) - 300 //
+    console.log(startZ);
+    let platform = new Platform(platformsPrefabs[i], -18, 0, startZ, platformGap);
+    platforms.push(platform);
+  }
 
   environment = new Environment(
     new Sky(GameConfig.sky),
@@ -41,10 +53,14 @@ function draw() {
   environment.update(gameSpeed);  
   environment.display(player.currentLane);
 
+  platforms.forEach(platform => {
+    platform.move(gameSpeed);  // Player'a doğru hareket
+    platform.draw();
+  });
+
   updateStats(gameSpeed);
 }
 
-// Klavye ile şerit değiştirme
 function keyPressed() {
   if (keyCode === LEFT_ARROW) {
     player.move('left');

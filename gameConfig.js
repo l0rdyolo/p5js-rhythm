@@ -1,7 +1,7 @@
 const GameConfig = {
      canvas: {
        size: 680,
-       backgroundColor: [0, 0, 0],
+       backgroundColor: [120, 120, 120],
        pixelDensity: 1
      },
      player: {
@@ -13,7 +13,7 @@ const GameConfig = {
           startY: 0,
           startZ: 50,
           gap: 40,
-          collectableSize: 8,
+          collectableSize: 6,
           obstacleSize: 10,
           resetX: 3000,
           grid: [

@@ -1,29 +1,24 @@
 class Collectable {
-  constructor(xOffset, yOffset, zOffset, size) {
+  constructor(xOffset, yOffset, zOffset, size , parent) {
+    this.parent = parent;
     this.offset = createVector(xOffset, yOffset, zOffset);  // Platforma göre relatif pozisyon
     this.size = size;
     this.baseSize = size;  // Collectable'ın temel boyutu
-    this.scaleOffset = random(1000);  // Ölçek animasyonu için başlangıç
-    this.scaleSpeed = 0.05;  // Ölçekleme hızı
-    this.colorStep = 0;  // Renk geçişi için başlangıç
-    this.colorSpeed = 0.02;  // Renk geçiş hızı
+    this.position = createVector(); 
+    this.position = this.offset.add(this.parent.position)
+
   }
 
-  move(platformPos) {
-    // Collectable pozisyonunu platformun pozisyonuna göre günceller
-    this.x = platformPos.x + this.offset.x;
-    this.y = platformPos.y + this.offset.y;
-    this.z = platformPos.z + this.offset.z;
+  move() {
+    this.position.x = this.parent.position.x + this.offset.x;
+    this.position.y = this.parent.position.y + this.offset.y;
+    this.position.z = this.parent.position.z + this.offset.z;
   }
 
   draw() {
-    // Basit nefes alma animasyonu (büyüme/küçülme)
-    // this.size = this.baseSize + sin(this.scaleOffset) * 5;
-    // this.scaleOffset += this.scaleSpeed;
-
     push();
-    translate(this.x, this.y, this.z);  // Collectable'ı güncel pozisyonuna göre çizer
-    fill(255, 0, 0);  // Rastgele bir renk örneği (kırmızı)
+    translate(this.position.x, this.position.y, this.position.z);  // Collectable'ı güncel pozisyonuna göre çizer
+    fill(255, 0, 0);
     noStroke();
     sphere(this.size);  // Collectable'ın şekli (küre)
     pop();
