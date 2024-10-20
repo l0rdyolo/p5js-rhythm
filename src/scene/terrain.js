@@ -1,25 +1,26 @@
 class Terrain {
   constructor(config) {
-    this.rows = config.rows;                 // Config'ten satır sayısı
-    this.cols = config.cols;                 // Config'ten sütun sayısı
-    this.size = config.size;                 // Config'ten hücre boyutu
-    this.altitude = config.altitude;         // Config'ten dağ yüksekliği
-    this.trench = config.trench;             // Config'ten vadi genişliği
-    this.color = color(...config.color);     // Config'ten terrain rengi
-    this.strokeColor = color(...config.strokeColor);  // Config'ten stroke rengi
-    this.terrain = [];
-    this.rowPosition = 0;
+    this.rows = config.rows;
+    this.cols = config.cols;
+    this.size = config.size;
+    this.altitude = config.altitude;
+    this.trench = config.trench;
+    this.color = color(...config.color);
+    this.strokeColor = color(...config.strokeColor);
+    this.terrainMesh = []; // Mesh verileri burada tutulacak
     this.flying = 0;
+    this.rowPosition = 0;
     this.initializeTerrain();
   }
 
   initializeTerrain() {
     for (let y = 0; y < this.rows; y++) {
-      this.terrain[y] = [];
+
+      let row = [];
       for (let x = 0; x < this.cols; x++) {
-        this.terrain[y][x] = this.renderTerrainPoint(x, y);
+        row.push(this.renderTerrainPoint(x, y));
       }
-      this.rowPosition++;
+      this.terrainMesh.push(row);
     }
   }
 
@@ -36,19 +37,16 @@ class Terrain {
   }
 
   update(gameSpeed) {
-    console.log(gameSpeed);
-    
     this.flying += gameSpeed;
     if (this.flying >= this.size) {
       this.flying = 0;
-      this.terrain.pop();
-
-      const newRow = [];
+      this.rowPosition++;
+      this.terrainMesh.pop(); // Son satırı sil
+      let newRow = [];
       for (let x = 0; x < this.cols; x++) {
         newRow.push(this.renderTerrainPoint(x, this.rowPosition));
       }
-      this.terrain.unshift(newRow);
-      this.rowPosition++;
+      this.terrainMesh.unshift(newRow); // Yeni satırı başa ekle
     }
   }
 
@@ -56,21 +54,16 @@ class Terrain {
     push();
     rotateX(PI / 2);
     translate(-220, -2400, -40);
-    fill(this.color);  // Terrain rengini ayarladık
-
+    fill(this.color);
+    stroke(this.strokeColor);
+    strokeWeight(2);
+    
+    // Terrain mesh'i bir kere hesaplandıktan sonra sürekli yeniden çizilir
     for (let y = 0; y < this.rows - 1; y++) {
       beginShape(TRIANGLE_STRIP);
       for (let x = 0; x < this.cols; x++) {
-        // Çukur bölgesi için stroke'u kapatıyoruz
-        if (x === this.trench || x === (this.trench + 1)) {
-          noStroke();
-        } else {
-          stroke(this.strokeColor);  // Diğer bölgeler için stroke uygulanır
-          strokeWeight(2);
-        }
-
-        vertex(x * this.size, (y * this.size) + this.flying, this.terrain[y][x]);
-        vertex(x * this.size, ((y + 1) * this.size) + this.flying, this.terrain[y + 1][x]);
+        vertex(x * this.size, y * this.size + this.flying, this.terrainMesh[y][x]);
+        vertex(x * this.size, (y + 1) * this.size + this.flying, this.terrainMesh[y + 1][x]);
       }
       endShape();
     }

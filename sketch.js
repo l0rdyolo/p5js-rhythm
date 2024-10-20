@@ -1,64 +1,69 @@
 let environment;
 let player;
 let platform;
-let gameSpeed =  5;
+let soundManager;
+let gameSpeed = 2;
 let cameraX = 0;
 let technoMusic;
 let score = 0;
-let platforms = [];
 
-const BASE_SPEED = 5;  // Oyun için temel hız
-const MAX_SPEED = 20;   // Maksimum oyun hızı
+let ground;
+let lanePositions;
+
+let platforms = [];
+let platformGap = 50; 
+
+const BASE_SPEED = 10;
+const MAX_SPEED = 30;
 
 function preload() {
-  // Müziği yüklüyoruz
-  technoMusic = loadSound(GameConfig.music.src);
+  technoMusic = loadSound(GameConfig.music.src);  
 }
 
 function setup() {
-  // Ana canvas'ı oluşturuyoruz
   createCanvas(GameConfig.canvas.size, 400, WEBGL);
   pixelDensity(GameConfig.canvas.pixelDensity);
   colorMode(RGB, 255, 255, 255, 1);
 
+  soundManager = new SoundManager(technoMusic);
 
 
-  // Environment, Player ve Platform nesnelerini oluşturuyoruz
+  ground = new Ground(GameConfig.ground);
+  //calculeted when ground init
+  lanePositions = ground.lanePositions;
+
   environment = new Environment(
     new Sky(GameConfig.sky),
     new Terrain(GameConfig.terrain),
-    new Ground(GameConfig.ground)
+    ground
   );
-  player = new Player(GameConfig.player);
-  platform = new Platform(GameConfig.platform);
+  player = new Player(GameConfig.player , lanePositions);
+
+  for (let i = 0; i < platformsPrefabs.length; i++) {
+    let startZ = (i * (platformGap * 4) ) - 200 //
+    let platform = new Platform(platformsPrefabs[i], 0, -5, startZ, platformGap , lanePositions);
+    platforms.push(platform);
+  }
+
+
 }
 
 function draw() {
-  background(GameConfig.colors.background);  // Arka plan rengini config'ten alıyoruz
-
-  // Amplitüd ile oyun hızını dinamik olarak ayarlıyoruz
-
-  // Kamerayı oyuncuya göre ayarlıyoruz
+  background(GameConfig.colors.background);  
   cameraX = lerp(cameraX, player.x, 0.1);
   cam = createCamera();
   cam.setPosition(cameraX, -30, 100);
   cam.lookAt(cameraX, -30, 0);
 
-  // Player ve platformları çiziyoruz
   player.draw();
 
-  platforms.forEach((platform) => {
-    platform.move(gameSpeed * -1);
-    platform.draw();
-
-    if (platform.position.x < GameConfig.platformsProps.resetX) {
-      platform.position.x = GameConfig.platformsProps.startX;
-    }
-  });
-
-  // Ortam ve hız güncellemesi
-  environment.update(gameSpeed);
+  environment.update(gameSpeed);  
   environment.display(player.currentLane);
+
+  platforms.forEach(platform => {
+    platform.move(gameSpeed);  // Player'a doğru hareket
+    platform.draw();
+  });
 
 
   updateStats(gameSpeed);
@@ -73,11 +78,10 @@ function keyPressed() {
   }
 }
 
-// Oyun istatistiklerini güncelleyen fonksiyon
-function updateStats(gameSpeed) {
-  document.getElementById('speedDisplay').innerHTML = `Speed: ${(gameSpeed ).toFixed(0)}`;  // Nokta kaldırıldı
-  document.getElementById('fpsDisplay').innerHTML = `FPS: ${frameRate().toFixed(0)}`;           // FPS'de de nokta kaldırıldı
-  document.getElementById('score').innerHTML = `Score: ${score}`;  // Skor zaten tam sayı
-}
 
+function updateStats(gameSpeed) {
+  document.getElementById('speedDisplay').innerHTML = `Speed: ${gameSpeed.toFixed(0)}`; 
+  document.getElementById('fpsDisplay').innerHTML = `FPS: ${frameRate().toFixed(0)}`;
+  document.getElementById('score').innerHTML = `Score: ${score}`;
+}
 

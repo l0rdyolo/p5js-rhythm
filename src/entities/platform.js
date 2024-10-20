@@ -1,33 +1,26 @@
 class Platform {
-  constructor(config) {
-    this.position = createVector(
-      config.startX,
-      config.startY,
-      config.startZ
-    ); // Platformun merkezi pozisyonu
-    this.gap = config.gap;  // Aradaki boşluk
-    this.collectableSize = config.collectableSize;
-    this.obstacleSize = config.obstacleSize;
+  constructor(grid, startX, startY, startZ, gap, lanePositions) {
+    this.grid = grid;  // 3x3 grid yapısı
+    this.position = createVector(startX, startY, startZ);  // Platformun pozisyonu
+    this.gap = gap;  
+    this.lanePositions = lanePositions; // Lane pozisyonları
     this.collectables = [];
     this.obstacles = [];
-    this.grid = config.grid;  // Matris şeklindeki girdi
-
-    this.resetX = config.resetX || 3000;  // Varsayılan reset pozisyonu
-
+    this.isActive = true;
     this.setup();
   }
 
   setup() {
-    for (let i = 0; i < this.grid.length; i++) { // Satırları döngüyle gez
-      for (let j = 0; j < this.grid[i].length; j++) { // Sütunları döngüyle gez
-        let xOffset = j * (this.collectableSize + this.gap);  // X pozisyonu
-        let zOffset = i * (this.collectableSize + this.gap);  // Z pozisyonu
+    for (let i = 0; i < this.grid.length; i++) {
+      for (let j = 0; j < this.grid[i].length; j++) {
+        let zOffset = i * (this.gap + 15);  // Z ekseni pozisyonu
+        let xLanePosition = this.lanePositions[j];  // X ekseni pozisyonu (lane'a göre)
 
         if (this.grid[i][j] === 1) {
-          let collectable = new Collectable(xOffset, 0, zOffset, this.collectableSize);
+          let collectable = new Collectable(xLanePosition, 0, zOffset, GameConfig.platform.collectableSize, this);  
           this.collectables.push(collectable);
         } else if (this.grid[i][j] === 2) {
-          let obstacle = new Obstacle(xOffset, 0, zOffset, this.obstacleSize);
+          let obstacle = new Obstacle(xLanePosition, 0, zOffset, GameConfig.platform.obstacleSize, this);  
           this.obstacles.push(obstacle);
         }
       }
@@ -35,40 +28,32 @@ class Platform {
   }
 
   move(speed) {
-    this.position.x += speed;  // Platformu hareket ettir
+    this.position.z += speed;  // Platformu hareket ettir
+    this.collectables.forEach(collectable => collectable.move(this.position));  
+    this.obstacles.forEach(obstacle => obstacle.move(this.position)); 
 
-    // Collectable ve Obstacle'ların pozisyonlarını güncelle
-    this.collectables.forEach((collectable) => {
-      collectable.move(this.position);  // Platformun pozisyonuna göre günceller
-    });
+    if (this.position.z > 300) {  
+      this.isActive = false;
+      this.position.z = -1000;
+    }
+    else if(this.position.z > -1000){
+      this.isActive = true;
 
-    this.obstacles.forEach((obstacle) => {
-      obstacle.move(this.position);  // Obstacle için de aynı şekilde güncellenir
-    });
-
-    if (this.position.x < -800) {  // Ekranın dışına çıktıysa resetle
-      this.resetPosition();
     }
   }
 
   draw() {
+    if(!this.isActive) return;
     push();
-    rotateY(HALF_PI);  // Platformu 90 derece Y ekseninde döndür
-
-    // Collectable'ları çiz
-    this.collectables.forEach((collectable) => {
-      collectable.draw();
-    });
-
-    // Obstacle'ları çiz
-    this.obstacles.forEach((obstacle) => {
-      obstacle.draw();
-    });
-
+    translate(this.position.x, this.position.y, this.position.z);
+    this.collectables.forEach(collectable => collectable.draw());
+    this.obstacles.forEach(obstacle => obstacle.draw());
     pop();
   }
 
   resetPosition() {
-    this.position.x = this.resetX;  // Reset pozisyonu
+
   }
 }
+
+

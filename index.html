@@ -7,33 +7,43 @@
   <script src="lib/p5.js"></script>
   <script src="lib/p5.sound.min.js"></script>
   <style>
-    canvas {
-      display: block;
-    }
     body {
+      margin: 0;
+      padding: 0;
+      background-color: #1c1c1c;  /* Koyu gri arka plan (dark mode) */
       display: flex;
       justify-content: center;
-      align-items: flex-start;
-      flex-direction: column;
-    }
-    #stats {
-      position: absolute;
-      top: 10px;
-      left: 10px;
-      font-size: 22px;
-      color: rgb(102, 255, 102); /* Açık yeşil yazı rengi */
-      background-color: rgba(0, 0, 0, 0.8); /* Siyah arka plan (şeffaf) */
-      padding: 15px;
-      border-radius: 10px; /* Köşeleri hafif yuvarla */
-      width: 120px; /* Kare şeklinde tutmak için genişlik ayarı */
-      height: 150px;
-      display: flex;
-      flex-direction: column;
-      justify-content: space-around;
       align-items: center;
-      text-align: center;
+      height: 100vh;
+      overflow: hidden;
+      font-family: 'Arial', sans-serif;
     }
 
+    #stats {
+      position: absolute;
+      top: 20px;
+      left: 20px;
+      font-size: 18px;
+      color: rgb(102, 255, 102);
+      background-color: rgba(0, 0, 0, 0.75);
+      padding: 20px;
+      border-radius: 15px;
+      width: 140px;
+      box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.5);
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      align-items: center;
+      text-align: center;
+      line-height: 1.6;
+    }
+
+    canvas {
+      display: block;
+      margin: auto; /* Ortaya hizalama */
+      border-radius: 10px; /* Köşeleri hafif yuvarla */
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.7); /* Hafif gölge */
+    }
   </style>
 </head>
 <body>
@@ -50,24 +60,36 @@
   <script src="src/entities/player.js"></script>
 
   
+
+  <!-- Entities -->
+  <script src="src/entities/platform.js"></script>
+  <script src="src/entities/obstacle.js"></script>
+  <script src="src/entities/collectable.js"></script>
+  <script src="src/entities/building.js"></script>
+  <script src="src/entities/player.js"></script>
+
   <!-- Effects -->
   <script src="src/effects/laneLine.js"></script>
   <script src="src/effects/particle.js"></script>
-  
+
   <!-- Managers -->
-  <!-- <script src="src/managers/laneLineManager.js"></script> -->
   <script src="src/managers/environment.js"></script>
-  
+  <script src="src/managers/soundManager.js"></script>
+
+
   <!-- Scene -->
   <script src="src/scene/ground.js"></script>
   <script src="src/scene/sky.js"></script>
   <script src="src/scene/terrain.js"></script>
-  
+
+
   <!-- Utils -->
   <script src="src/utils/colorPalette.js"></script>
   <script src="src/utils/Color.js"></script>
 
-  <script src="gameConfig.js"></script>
+
+  <script src="src/level/platformPrefabs.js"></script>
+
 
   <!-- Main Sketch -->
   <script src="sketch.js"></script>

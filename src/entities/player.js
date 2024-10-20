@@ -1,8 +1,8 @@
 class Player {
-  constructor(config) { // Enable trail with a default value
-    this.lanePositions = config.lanePositions; 
+  constructor(config , lanePositions) { // Enable trail with a default value
+    this.lanePositions = lanePositions; 
     this.currentLane = 1; 
-    this.x = config.lanePositions[this.currentLane]; 
+    this.x = this.lanePositions[this.currentLane]; 
     this.y = -10;
     this.z = 30;
     this.size = {x:10,y:10,z:20}
