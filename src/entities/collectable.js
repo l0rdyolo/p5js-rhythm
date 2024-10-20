@@ -1,18 +1,14 @@
+
 class Collectable {
-  constructor(xOffset, yOffset, zOffset, size , parent) {
+  constructor(xOffset, yOffset, zOffset, size, parent) {
     this.parent = parent;
     this.offset = createVector(xOffset, yOffset, zOffset);  // Platforma göre relatif pozisyon
     this.size = size;
-    this.baseSize = size;  // Collectable'ın temel boyutu
-    this.position = createVector(); 
-    this.position = this.offset.add(this.parent.position)
-
+    this.position = p5.Vector.add(this.offset, this.parent.position);
   }
 
-  move() {
-    this.position.x = this.parent.position.x + this.offset.x;
-    this.position.y = this.parent.position.y + this.offset.y;
-    this.position.z = this.parent.position.z + this.offset.z;
+  move(platformPos) {
+    this.position = p5.Vector.add(this.offset, platformPos);
   }
 
   draw() {

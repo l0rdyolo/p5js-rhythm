@@ -1,16 +1,13 @@
 class Obstacle {
-  constructor(xOffset, yOffset, zOffset, size , parent) {
+  constructor(xOffset, yOffset, zOffset, size, parent) {
     this.offset = createVector(xOffset, yOffset, zOffset);  // Platforma göre relatif pozisyon
     this.size = size;
     this.parent = parent;
-    this.position = createVector();
-    this.position = this.offset.add(this.parent.position)
+    this.position = p5.Vector.add(this.offset, this.parent.position);
   }
   
   move(platformPos) {
-    this.position.x = platformPos.x + this.offset.x;
-    this.position.y = platformPos.y + this.offset.y;
-    this.position.z = platformPos.z + this.offset.z;
+    this.position = p5.Vector.add(this.offset, platformPos);
   }
   
   draw() {

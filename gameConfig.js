@@ -12,7 +12,7 @@ const GameConfig = {
           startX: 2500,
           startY: 0,
           startZ: 50,
-          gap: 40,
+          gap: 50,
           collectableSize: 6,
           obstacleSize: 10,
           resetX: 3000,

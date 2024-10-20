@@ -8,9 +8,10 @@ let technoMusic;
 let score = 0;
 
 let ground;
+let lanePositions;
 
 let platforms = [];
-let platformGap = 20; 
+let platformGap = 50; 
 
 const BASE_SPEED = 10;
 const MAX_SPEED = 30;
@@ -26,22 +27,25 @@ function setup() {
 
   soundManager = new SoundManager(technoMusic);
 
-  for (let i = 0; i < platformsPrefabs.length; i++) {
-    let startZ = (i * (platformGap * 4) ) - 300 //
-    console.log(startZ);
-    let platform = new Platform(platformsPrefabs[i], -18, -5, startZ, platformGap);
-    platforms.push(platform);
-  }
-
 
   ground = new Ground(GameConfig.ground);
+  //calculeted when ground init
+  lanePositions = ground.lanePositions;
 
   environment = new Environment(
     new Sky(GameConfig.sky),
     new Terrain(GameConfig.terrain),
     ground
   );
-  player = new Player(GameConfig.player , ground.lanePositions);
+  player = new Player(GameConfig.player , lanePositions);
+
+  for (let i = 0; i < platformsPrefabs.length; i++) {
+    let startZ = (i * (platformGap * 4) ) - 200 //
+    let platform = new Platform(platformsPrefabs[i], 0, -5, startZ, platformGap , lanePositions);
+    platforms.push(platform);
+  }
+
+
 }
 
 function draw() {
