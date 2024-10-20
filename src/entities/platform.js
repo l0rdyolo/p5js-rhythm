@@ -38,6 +38,7 @@ class Platform {
     }
     else if(this.position.z > -1000){
       this.isActive = true;
+
     }
   }
 
@@ -51,6 +52,8 @@ class Platform {
   }
 
   resetPosition() {
+
   }
 }
+
 

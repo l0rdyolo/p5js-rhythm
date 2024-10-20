@@ -15,6 +15,7 @@ class Terrain {
 
   initializeTerrain() {
     for (let y = 0; y < this.rows; y++) {
+
       let row = [];
       for (let x = 0; x < this.cols; x++) {
         row.push(this.renderTerrainPoint(x, y));

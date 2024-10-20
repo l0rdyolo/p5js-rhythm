@@ -1,4 +1,5 @@
 
+
 class Collectable {
   constructor(xOffset, yOffset, zOffset, size, parent) {
     this.parent = parent;
@@ -15,6 +16,7 @@ class Collectable {
     push();
     translate(this.position.x, this.position.y, this.position.z);  // Collectable'ı güncel pozisyonuna göre çizer
     fill(255, 0, 0);
+
     noStroke();
     sphere(this.size);  // Collectable'ın şekli (küre)
     pop();
