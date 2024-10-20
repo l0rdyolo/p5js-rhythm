@@ -66,9 +66,11 @@ function draw() {
     platform.draw();
   });
 
+
   updateStats(gameSpeed);
 }
 
+// Klavye ile şerit değiştirme
 function keyPressed() {
   if (keyCode === LEFT_ARROW) {
     player.move('left');
@@ -77,8 +79,10 @@ function keyPressed() {
   }
 }
 
+
 function updateStats(gameSpeed) {
   document.getElementById('speedDisplay').innerHTML = `Speed: ${gameSpeed.toFixed(0)}`; 
   document.getElementById('fpsDisplay').innerHTML = `FPS: ${frameRate().toFixed(0)}`;
   document.getElementById('score').innerHTML = `Score: ${score}`;
 }
+

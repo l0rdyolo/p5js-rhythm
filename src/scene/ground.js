@@ -1,10 +1,10 @@
 class Ground {
-
   constructor(config) {
     this.width = config.width;
     this.length = config.length;
     this.laneCount = config.laneCount;
     this.stripeWidth = config.stripeWidth;
+
     this.colorPalette = new ColorPalette();
     
     this.stripes = [];
