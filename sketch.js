@@ -18,8 +18,6 @@ function preload() {
 }
 
 function setup() {
-
-  
   createCanvas(GameConfig.canvas.size, 400, WEBGL);
   pixelDensity(GameConfig.canvas.pixelDensity);
   colorMode(RGB, 255, 255, 255, 1);
@@ -29,7 +27,7 @@ function setup() {
   for (let i = 0; i < platformsPrefabs.length; i++) {
     let startZ = (i * (platformGap * 4) ) - 300 //
     console.log(startZ);
-    let platform = new Platform(platformsPrefabs[i], -18, 0, startZ, platformGap);
+    let platform = new Platform(platformsPrefabs[i], -18, -5, startZ, platformGap);
     platforms.push(platform);
   }
 

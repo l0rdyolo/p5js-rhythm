@@ -35,18 +35,18 @@ const GameConfig = {
        starCount: 350
      },
      terrain: {
-          rows: 70,            // Satır sayısı (derinlik)
-          cols: 15,            // Sütun sayısı (genişlik)
-          size: 40,            // Hücre boyutu
+          rows: 39,            // Satır sayısı (derinlik)
+          cols: 8,            // Sütun sayısı (genişlik)
+          size: 70,            // Hücre boyutu
           altitude: 150,       // Dağlık bölgelerin yüksekliği
-          trench: 5,           // Vadi genişliği
+          trench:3,           // Vadi genişliği
           color: [0, 120, 222],       // Terrain rengi (RGB formatında)
           strokeColor: [255, 255, 255]  // Stroke rengi (RGB formatında)
         },
      colors: {
        background: [8, 44, 127],
        primary: [0, 255, 248],
-       secondary: [255, 0, 253],
+       secondary: [255, 0, 25 ],
        tertiary: [0, 29, 95]
      },
      music: {
