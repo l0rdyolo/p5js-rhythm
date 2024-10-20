@@ -37,7 +37,6 @@ class Player {
     this.targetX = this.lanePositions[this.currentLane]; 
   }
 
-  // Get the bounding box of the player (for collision detection)
   getBoundingBox() {
     return {
       minX: this.x - this.size.x / 2,
@@ -49,7 +48,6 @@ class Player {
     };
   }
 
-  // Check for collision with another object that has a bounding box
   checkCollision(target) {
     let playerBox = this.getBoundingBox();
     let targetBox = target.getBoundingBox();
