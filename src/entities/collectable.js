@@ -4,19 +4,17 @@ class Collectable extends Collideable {
   }
 
   draw() {
+    super.draw();
     push();
     translate(this.position.x, this.position.y, this.position.z);
-    fill(255, 0, 0);  
+    fill(255, 220, 0);  
     noStroke();
     sphere(this.size);  
     pop();
   }
 
   collide(player) {
-    if (super.isCollide(player) && !this._isCollided) {
-      super.collide();
-      return true;
-    }
-    return false;
+    console.log("collec");
   }
+
 }

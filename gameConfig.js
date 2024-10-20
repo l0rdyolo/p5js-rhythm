@@ -23,7 +23,6 @@ const GameConfig = {
           ]
         },
      ground: {
-
        width: 200,
        length: 1500,
        laneCount: 3,
@@ -57,6 +56,10 @@ const GameConfig = {
      music: {
        src: 'assets/sounds/tecno.mp3',
        baseSpeed: 2
-     }
+     },
+     types: {
+      collectable: 'COLLECTABLE',
+      obstacle: 'OBSTACLE',
+    }
    };
    

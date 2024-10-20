@@ -5,29 +5,25 @@ class Player {
     this.x = this.lanePositions[this.currentLane]; 
     this.y = -10;
     this.z = 30;
-    this.size = { x: 10, y: 10, z: 20 };  // Car body size (width, height, depth)
+    this.size = { x: 10, y: 10, z: 20 };  
     this.targetX = this.x; 
-    this.lerpAmount = 0.1;  // Smoothing factor for lane movement
+    this.lerpAmount = 0.1;  
   }
 
   draw() {
-    this.x = lerp(this.x, this.targetX, this.lerpAmount);  // Smooth lane switching
+    this.x = lerp(this.x, this.targetX, this.lerpAmount); 
     this.drawCar();
   }
 
   drawCar() {
     push();
     translate(this.x, this.y, this.z);
-    rotateY(HALF_PI);  // Rotate the car model to face forward
-
     fill(15, 25, 20);
     noStroke();  
-    box(this.size.x, this.size.y, this.size.z);  // Car body size
-
+    box(this.size.x, this.size.y, this.size.z);  
     pop();
   }
 
-  // Move player between lanes
   move(direction) {
     if (direction === 'left' && this.currentLane > 0) {
       this.currentLane--;
@@ -35,30 +31,5 @@ class Player {
       this.currentLane++;
     }
     this.targetX = this.lanePositions[this.currentLane]; 
-  }
-
-  getBoundingBox() {
-    return {
-      minX: this.x - this.size.x / 2,
-      maxX: this.x + this.size.x / 2,
-      minY: this.y - this.size.y / 2,
-      maxY: this.y + this.size.y / 2,
-      minZ: this.z - this.size.z / 2,
-      maxZ: this.z + this.size.z / 2
-    };
-  }
-
-  checkCollision(target) {
-    let playerBox = this.getBoundingBox();
-    let targetBox = target.getBoundingBox();
-
-    return !(
-      playerBox.maxX < targetBox.minX ||
-      playerBox.minX > targetBox.maxX ||
-      playerBox.maxY < targetBox.minY ||
-      playerBox.minY > targetBox.maxY ||
-      playerBox.maxZ < targetBox.minZ ||
-      playerBox.minZ > targetBox.maxZ
-    );
   }
 }
