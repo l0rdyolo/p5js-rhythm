@@ -1,14 +1,27 @@
 class Ground {
+
   constructor(config) {
     this.width = config.width;
     this.length = config.length;
     this.laneCount = config.laneCount;
     this.stripeWidth = config.stripeWidth;
-    this.laneWidth = this.width / this.laneCount;
     this.colorPalette = new ColorPalette();
-
+    
     this.stripes = [];
     this.initializeStripes();
+
+    this.laneWidth = this.width / this.laneCount; 
+    this.lanePositions = this.calculateLanePositions(); 
+  }
+
+  calculateLanePositions() {
+    let positions = [];
+    let halfWidth = this.width / 2;
+    for (let i = 0; i < this.laneCount; i++) {
+      let position = -halfWidth + (i * this.laneWidth) + (this.laneWidth / 2);
+      positions.push(position);
+    }
+    return positions; // Şerit pozisyonları dizisini döndür
   }
 
   initializeStripes() {

@@ -23,7 +23,7 @@ const GameConfig = {
           ]
         },
      ground: {
-       width: 100,
+       width: 200,
        length: 1500,
        laneCount: 3,
        stripeWidth: 5,

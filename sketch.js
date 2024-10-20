@@ -7,6 +7,8 @@ let cameraX = 0;
 let technoMusic;
 let score = 0;
 
+let ground;
+
 let platforms = [];
 let platformGap = 20; 
 
@@ -31,12 +33,15 @@ function setup() {
     platforms.push(platform);
   }
 
+
+  ground = new Ground(GameConfig.ground);
+
   environment = new Environment(
     new Sky(GameConfig.sky),
     new Terrain(GameConfig.terrain),
-    new Ground(GameConfig.ground)
+    ground
   );
-  player = new Player(GameConfig.player);
+  player = new Player(GameConfig.player , ground.lanePositions);
 }
 
 function draw() {
