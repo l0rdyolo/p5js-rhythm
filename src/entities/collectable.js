@@ -1,20 +1,19 @@
-class Collectable extends Collideable {
+class Collectable extends Entity {
   constructor(xOffset, yOffset, zOffset, size, parent) {
     super(xOffset, yOffset, zOffset, size, parent);  
   }
 
-  draw() {
-    super.draw();
+  draw(){
+    if(!this.active) return;
     push();
-    translate(this.position.x, this.position.y, this.position.z);
-    fill(255, 220, 0);  
-    noStroke();
-    sphere(this.size);  
+    translate(this.position.x, 0, this.position.z);
+    fill(0, 255, 0);
+    box(this.size, this.size, this.size);
     pop();
   }
 
-  collide(player) {
-    console.log("collec");
+  hit(){
+    super.hit();
+    console.log("obstacle");
   }
-
 }

@@ -5,12 +5,12 @@ class Ground {
     this.laneCount = config.laneCount;
     this.stripeWidth = config.stripeWidth;
     this.colorPalette = new ColorPalette();
+    this.localX = 20;
     
     this.stripes = [];
     this.initializeStripes();
-    
+
     this.laneWidth = this.width / this.laneCount; 
-    this.localX = 25;
     this.lanePositions = this.calculateLanePositions(); 
   }
 
@@ -18,8 +18,8 @@ class Ground {
     let positions = [];
     let halfWidth = this.width / 2;
     for (let i = 0; i < this.laneCount; i++) {
-      let position = (-halfWidth + (i * this.laneWidth) + (this.laneWidth / 2) ) + this.localX;
-      positions.push(position);
+      let position = -halfWidth + (i * this.laneWidth) + (this.laneWidth / 2);
+      positions.push(position + 20);
     }
     return positions; // Şerit pozisyonları dizisini döndür
   }

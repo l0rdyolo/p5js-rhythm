@@ -8,7 +8,7 @@ class Platform {
     this.obstacles = [];
     this.entites = [];
     this.isActive = true;
-    this.resetPosition = -1000;
+    this.resetPosition = -500;
     this.setup();
   }
 
@@ -23,7 +23,6 @@ class Platform {
             0,
             zOffset,
             GameConfig.platform.collectableSize,
-            this
           );
           this.collectables.push(collectable);
           this.entites.push(collectable);
@@ -33,7 +32,6 @@ class Platform {
             0,
             zOffset,
             GameConfig.platform.obstacleSize,
-            this
           );
           this.obstacles.push(obstacle);
           this.entites.push(obstacle);
@@ -41,30 +39,29 @@ class Platform {
       }
     }
   }
+  
+  update(speed , player) {
+    this.entites.forEach(entity => {
+      entity.move(speed)
+      entity.checkCollision(player);
+    });
+
+  }
 
   move(speed) {
-    this.position.z += speed;
-    this.collectables.forEach(collectable => collectable.move(this.position));
-    this.obstacles.forEach(obstacle => obstacle.move(this.position));
-    if (this.position.z > 300) {
-        this.isActive = false;
-        this.resetEntites();
-    }
   }
 
   draw() {
+    if (!this.isActive) return;
     push();
     translate(this.position.x, this.position.y, this.position.z);
-    this.collectables.forEach(collectable => collectable.draw());
-    this.obstacles.forEach(obstacle => obstacle.draw());
+    this.entites.forEach(entity => entity.draw());
     pop();
   }
 
-  resetEntites(){
+  resetEntites() {
     this.entites.forEach(entity => {
       entity.reset();
-    })
-    this.position.z = this.resetPosition;
-    this.isActive = true;
+    });
   }
 }

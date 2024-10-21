@@ -6,7 +6,10 @@ const GameConfig = {
      },
      player: {
        lanePositions: [-40, 0, 40],
-       enableTrail: false
+       enableTrail: false,
+       width:20,
+       height:10,
+       depth:10,
      },
      platform: {
           startX: 2500,
@@ -16,11 +19,6 @@ const GameConfig = {
           collectableSize: 6,
           obstacleSize: 10,
           resetX: 3000,
-          grid: [
-            [0, 1, 0],  
-            [0, 1, 0],  
-            [0, 1, 2]   
-          ]
         },
      ground: {
        width: 200,
@@ -35,7 +33,6 @@ const GameConfig = {
        starCount: 350
      },
      terrain: {
-
           rows: 39,            // Satır sayısı (derinlik)
           cols: 8,            // Sütun sayısı (genişlik)
           size: 70,            // Hücre boyutu

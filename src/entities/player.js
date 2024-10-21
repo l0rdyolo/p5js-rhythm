@@ -2,25 +2,26 @@ class Player {
   constructor(config, lanePositions) {
     this.lanePositions = lanePositions; 
     this.currentLane = 1; 
-    this.x = this.lanePositions[this.currentLane]; 
-    this.y = -10;
-    this.z = 30;
-    this.size = { x: 10, y: 10, z: 20 };  
-    this.targetX = this.x; 
+    this.position = createVector(this.lanePositions[this.currentLane] , 0 , -30)
+    this.width = config.width;
+    this.height = config.height;
+    this.depth = config.depth;
+    this.targetX = this.position.x; 
     this.lerpAmount = 0.1;  
+    this.collideDistance = 4;  // Çarpışma hassasiyeti
   }
 
   draw() {
-    this.x = lerp(this.x, this.targetX, this.lerpAmount); 
+    this.position.x = lerp(this.position.x, this.targetX, this.lerpAmount); 
     this.drawCar();
   }
 
   drawCar() {
     push();
-    translate(this.x, this.y, this.z);
-    fill(15, 25, 20);
+    translate(this.position.x, this.position.y, this.position.z);
+    fill(250, 255, 250);
     noStroke();  
-    box(this.size.x, this.size.y, this.size.z);  
+    box(this.width, this.height, this.depth);  
     pop();
   }
 
@@ -31,5 +32,22 @@ class Player {
       this.currentLane++;
     }
     this.targetX = this.lanePositions[this.currentLane]; 
+  }
+
+  collidesWith(entity) {
+    let distance = dist(this.position.x, this.position.y, this.position.z, entity.position.x, entity.position.y, entity.position.z);
+    return distance < this.collideDistance;  // Çarpışma kontrolü
+  }
+
+  checkCollisions(entities) {
+    entities.forEach(entity => {
+      if (this.collidesWith(entity) && !entity._isCollided) {
+        entity.hit(); 
+      }
+    });
+  }
+
+  hit(entity) {
+    console.log("Player hit an entity!");
   }
 }

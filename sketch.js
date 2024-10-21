@@ -2,7 +2,7 @@ let environment;
 let player;
 let platform;
 let soundManager;
-let gameSpeed = 0.1;
+let gameSpeed = 1;
 let cameraX = 0;
 let technoMusic;
 let score = 0;
@@ -12,6 +12,8 @@ let lanePositions;
 
 let platforms = [];
 let platformGap = 50; 
+
+let obstacle;
 
 const BASE_SPEED = 10;
 const MAX_SPEED = 30;
@@ -37,39 +39,32 @@ function setup() {
     new Terrain(GameConfig.terrain),
     ground
   );
+  obstacle = new Obstacle(createVector(0,0,-30),10);
+
   player = new Player(GameConfig.player , lanePositions);
-
-  for (let i = 0; i < platformsPrefabs.length; i++) {
-    let startZ = (i * (platformGap * 4) ) - 500 //
-    let platform = new Platform(platformsPrefabs[i], 0, -5, startZ, platformGap , lanePositions);
-    platforms.push(platform);
-  }
-
 
 }
 
 function draw() {
   background(GameConfig.colors.background);  
-  cameraX = lerp(cameraX, player.x, 0.1);
+  cameraX = lerp(cameraX, player.position.x, 0.1);
   cam = createCamera();
   
-  //test
-  cam.setPosition(cameraX, -300, 10);
+  // test
+  cam.setPosition(cameraX, -30, 100);
   cam.lookAt(cameraX, 0, 0);
 
-  // //base
+  //base
   // cam.setPosition(cameraX, -30, 100);
   // cam.lookAt(cameraX, -30, 0);
 
   environment.update(gameSpeed);  
   environment.display(player.currentLane);
-  
-  platforms.forEach(platform => {
-    platform.move(gameSpeed); 
-    platform.draw();
-  });
-  
+  obstacle.draw();
+  obstacle.checkCollision(player);
   player.draw();
+
+
   updateStats(gameSpeed);
 }
 
