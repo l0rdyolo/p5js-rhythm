@@ -1,10 +1,11 @@
 class Entity {
-  constructor(position, size) {
+  constructor(position, config) {
     this.position = position;
     this.basePosition = this.position.copy();
-    this.size = size;
+    this.size = config.size;
+    this.color = config.color;
     this.isCollected = false;
-    this.active = true;
+    this._active = true;
   }
 
   set active(value) {
@@ -17,9 +18,6 @@ class Entity {
 
   move(speed) {
     this.position.z += speed;
-    if (this.position.z > 2000) {
-      this.reset();
-    }
   }
 
   checkCollision(other) {
@@ -31,8 +29,8 @@ class Entity {
   }
 
   reset() {
-    this.position.z = this.basePosition.z;
-    this._isCollided = false;
+    this.position.z = this.basePosition.z - 500;
+    this.isCollected = false;
     this.active = true;
   }
 

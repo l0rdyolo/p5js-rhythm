@@ -2,7 +2,7 @@ class Player {
   constructor(config, lanePositions) {
     this.lanePositions = lanePositions; 
     this.currentLane = 1; 
-    this.position = createVector(this.lanePositions[this.currentLane] , 0 , -30)
+    this.position = createVector(this.lanePositions[this.currentLane] , 0 , 20)
     this.width = config.width;
     this.height = config.height;
     this.depth = config.depth;
