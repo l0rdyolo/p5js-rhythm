@@ -2,7 +2,7 @@ let environment;
 let player;
 let platform;
 let soundManager;
-let gameSpeed = 2;
+let gameSpeed = 0;
 let cameraX = 0;
 let technoMusic;
 let score = 0;
@@ -13,8 +13,10 @@ let lanePositions;
 let platforms = [];
 let platformGap = 50; 
 
-const BASE_SPEED = 10;
-const MAX_SPEED = 30;
+let obstacle;
+
+const BASE_SPEED = 6;
+const MAX_SPEED = 15;
 
 function preload() {
   technoMusic = loadSound(GameConfig.music.src);  
@@ -40,36 +42,45 @@ function setup() {
   player = new Player(GameConfig.player , lanePositions);
 
   for (let i = 0; i < platformsPrefabs.length; i++) {
-    let startZ = (i * (platformGap * 4) ) - 200 //
-    let platform = new Platform(platformsPrefabs[i], 0, -5, startZ, platformGap , lanePositions);
+    let startZ = (i * (platformGap * 4) ) - 500
+    let _grid = platformsPrefabs[i]; 
+    let platform = new Platform(
+      _grid,
+      platformGap,
+      startZ,
+      lanePositions
+    )
     platforms.push(platform);
   }
 
-
+  gameSpeed = BASE_SPEED;
 }
 
 function draw() {
   background(GameConfig.colors.background);  
-  cameraX = lerp(cameraX, player.x, 0.1);
+  cameraX = lerp(cameraX, player.position.x, 0.1);
   cam = createCamera();
-  cam.setPosition(cameraX, -30, 100);
-  cam.lookAt(cameraX, -30, 0);
+  
+  // test
+  cam.setPosition(cameraX, -300, 100);
+  cam.lookAt(cameraX, 0, 0);
 
-  player.draw();
+  //base
+  // cam.setPosition(cameraX, -30, 100);
+  // cam.lookAt(cameraX, -30, 0);
 
   environment.update(gameSpeed);  
   environment.display(player.currentLane);
-
+  player.draw();
+  
   platforms.forEach(platform => {
-    platform.move(gameSpeed);  // Player'a doğru hareket
     platform.draw();
+    platform.update(gameSpeed,player);
   });
-
 
   updateStats(gameSpeed);
 }
 
-// Klavye ile şerit değiştirme
 function keyPressed() {
   if (keyCode === LEFT_ARROW) {
     player.move('left');
@@ -77,7 +88,6 @@ function keyPressed() {
     player.move('right');
   }
 }
-
 
 function updateStats(gameSpeed) {
   document.getElementById('speedDisplay').innerHTML = `Speed: ${gameSpeed.toFixed(0)}`; 

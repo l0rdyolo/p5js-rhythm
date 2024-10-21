@@ -15,58 +15,72 @@
       justify-content: center;
       align-items: center;
       height: 100vh;
-      overflow: hidden;
       font-family: 'Arial', sans-serif;
+      position: relative;
     }
 
-    #stats {
-      position: absolute;
-      top: 20px;
-      left: 20px;
-      font-size: 18px;
-      color: rgb(102, 255, 102);
-      background-color: rgba(0, 0, 0, 0.75);
-      padding: 20px;
-      border-radius: 15px;
-      width: 140px;
-      box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.5);
-      display: flex;
-      flex-direction: column;
-      justify-content: space-between;
-      align-items: center;
-      text-align: center;
-      line-height: 1.6;
+    #container {
+      position: relative;
+      width: 680px;  /* Canvas genişliğinde */
+      height: 400px; /* Canvas yüksekliğinde */
     }
 
     canvas {
       display: block;
-      margin: auto; /* Ortaya hizalama */
+      width: 100%;
+      height: 100%;
       border-radius: 10px; /* Köşeleri hafif yuvarla */
       box-shadow: 0 4px 20px rgba(0, 0, 0, 0.7); /* Hafif gölge */
+    }
+
+    #navbar {
+      position: absolute;
+      top: 0;
+      width: 100%;  /* Canvas'ın genişliğinde */
+      display: flex;
+      justify-content: space-between;
+      padding: 10px;
+      box-sizing: border-box;
+      background-color: rgba(0, 0, 0, 0.75);  /* Yarı şeffaf arka plan */
+      color: rgb(102, 255, 102);
+      font-size: 18px;
+      z-index: 10; /* Canvas'ın üzerinde durmasını sağlamak için */
+    }
+
+    #fpsDisplay {
+      margin-left: 20px;
+    }
+
+    #scoreSpeed {
+      margin-right: 20px;
+      display: flex;
+      gap: 15px;
+    }
+
+    #score, #speedDisplay {
+      margin: 0;
     }
   </style>
 </head>
 <body>
-  <div id="stats">
-    <div id="speedDisplay">Speed: 0</div>
-    <div id="fpsDisplay">FPS: 0</div>
-    <div id="score">Score: 0</div>  <!-- Skoru göstermek için -->
-  </div>
+    <div id="navbar">
+      <div id="fpsDisplay">FPS: 0</div>
+      <div id="scoreSpeed">
+        <div id="score">Score: 0</div>
+        <div id="speedDisplay">Speed: 0</div>
+      </div>
+    </div>
+    
+    <script src="gameConfig.js"></script>
+
   <!-- Entities -->
-  <script src="src/entities/platform.js"></script>
+  <script src="src/entities/entity.js"></script>
   <script src="src/entities/obstacle.js"></script>
   <script src="src/entities/collectable.js"></script>
   <script src="src/entities/building.js"></script>
-  <script src="src/entities/player.js"></script>
-
-  
-
-  <!-- Entities -->
   <script src="src/entities/platform.js"></script>
-  <script src="src/entities/obstacle.js"></script>
-  <script src="src/entities/collectable.js"></script>
-  <script src="src/entities/building.js"></script>
   <script src="src/entities/player.js"></script>
+
 
   <!-- Effects -->
   <script src="src/effects/laneLine.js"></script>
@@ -76,17 +90,14 @@
   <script src="src/managers/environment.js"></script>
   <script src="src/managers/soundManager.js"></script>
 
-
   <!-- Scene -->
   <script src="src/scene/ground.js"></script>
   <script src="src/scene/sky.js"></script>
   <script src="src/scene/terrain.js"></script>
 
-
   <!-- Utils -->
   <script src="src/utils/colorPalette.js"></script>
   <script src="src/utils/Color.js"></script>
-
 
   <script src="src/level/platformPrefabs.js"></script>
 

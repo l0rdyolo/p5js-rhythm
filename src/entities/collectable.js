@@ -1,24 +1,23 @@
-
-
-class Collectable {
-  constructor(xOffset, yOffset, zOffset, size, parent) {
-    this.parent = parent;
-    this.offset = createVector(xOffset, yOffset, zOffset);  // Platforma göre relatif pozisyon
-    this.size = size;
-    this.position = p5.Vector.add(this.offset, this.parent.position);
+class Collectable extends Entity {
+  constructor(position,config) {
+    super(position,config); 
   }
 
-  move(platformPos) {
-    this.position = p5.Vector.add(this.offset, platformPos);
-  }
 
-  draw() {
+  draw(){
     push();
-    translate(this.position.x, this.position.y, this.position.z);  // Collectable'ı güncel pozisyonuna göre çizer
-    fill(255, 0, 0);
-
-    noStroke();
-    sphere(this.size);  // Collectable'ın şekli (küre)
+    translate(this.position.x, 0, this.position.z);
+    if(this.active){
+      fill(this.color);
+      box(this.size, this.size, this.size);
+    }
     pop();
+  }
+
+  hit(){
+    super.hit();
+    if(gameSpeed<MAX_SPEED){
+      gameSpeed++;
+    }
   }
 }

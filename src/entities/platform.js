@@ -1,59 +1,71 @@
 class Platform {
-  constructor(grid, startX, startY, startZ, gap, lanePositions) {
-    this.grid = grid;  // 3x3 grid yapısı
-    this.position = createVector(startX, startY, startZ);  // Platformun pozisyonu
-    this.gap = gap;  
-    this.lanePositions = lanePositions; // Lane pozisyonları
+  constructor(grid, gap, startZ ,lanePositions) {
+    this.grid = grid;
+    this.gap = gap;
+    this.lanePositions = lanePositions;
     this.collectables = [];
     this.obstacles = [];
-    this.isActive = true;
+    this.entities = [];
+    this.imposter = undefined;
+    this.startZ = startZ; 
     this.setup();
   }
 
   setup() {
     for (let i = 0; i < this.grid.length; i++) {
       for (let j = 0; j < this.grid[i].length; j++) {
-        let zOffset = i * (this.gap + 15);  // Z ekseni pozisyonu
-        let xLanePosition = this.lanePositions[j];  // X ekseni pozisyonu (lane'a göre)
-
+        let zOffset = i * (this.gap + 15) + this.startZ;
+        let xLanePosition = this.lanePositions[j];
+        let position = createVector(xLanePosition, 0, zOffset);
         if (this.grid[i][j] === 1) {
-          let collectable = new Collectable(xLanePosition, 0, zOffset, GameConfig.platform.collectableSize, this);  
+          let collectable = new Collectable(position, GameConfig.collectable);
           this.collectables.push(collectable);
+          this.entities.push(collectable);
         } else if (this.grid[i][j] === 2) {
-          let obstacle = new Obstacle(xLanePosition, 0, zOffset, GameConfig.platform.obstacleSize, this);  
+          let obstacle = new Obstacle(position, GameConfig.obstacle);
           this.obstacles.push(obstacle);
+          this.entities.push(obstacle);
+        }
+  
+        if (i === 0 && j === 0) {
+          this.imposter = new Collectable(position, GameConfig.collectable);
+          this.imposter.active = false;
+          this.entities.push(this.imposter);
         }
       }
     }
   }
+  
 
-  move(speed) {
-    this.position.z += speed;  // Platformu hareket ettir
-    this.collectables.forEach(collectable => collectable.move(this.position));  
-    this.obstacles.forEach(obstacle => obstacle.move(this.position)); 
-
-    if (this.position.z > 300) {  
-      this.isActive = false;
-      this.position.z = -1000;
+  update(speed, player) {
+    this.entities.forEach(entity => {
+        entity.move(speed); 
+        entity.checkCollision(player);
+    });
+    if (this.imposter && this.imposter.position.z > 100) {
+      this.resetEntities();  // Reset all entities
     }
-    else if(this.position.z > -1000){
-      this.isActive = true;
-
-    }
+    
   }
 
   draw() {
-    if(!this.isActive) return;
     push();
-    translate(this.position.x, this.position.y, this.position.z);
-    this.collectables.forEach(collectable => collectable.draw());
-    this.obstacles.forEach(obstacle => obstacle.draw());
+    this.entities.forEach(entity => {
+      if (entity.active) {
+        entity.draw(); 
+      }
+    });
     pop();
   }
 
-  resetPosition() {
+  resetEntities() {
+    this.entities.forEach(entity => {
+      entity.reset(); 
+    });
 
+    this.imposter.active = false;
+    this.imposter.isCollected = true; 
   }
+
+
 }
-
-
